@@ -27,9 +27,9 @@ function addFood() {
     let eveningWeight = parseFloat(document.getElementById('eveningWeight').value);
 
     if (!foodName) {
-        resultLabel.textContent = "请输入有效的食物名称。";
+        alert("请输入有效的食物名称。");
     } else if (foodName in foods) {
-        resultLabel.textContent = "此食物已存在，不能重复插入。";
+        alert("此食物已存在，不能重复插入。");
     } else if (!isNaN(morningWeight) && !isNaN(noonWeight) && !isNaN(eveningWeight)) {
         foods[foodName] = {
             morning: morningWeight,
@@ -39,20 +39,23 @@ function addFood() {
         foodCounts[foodName] = 0;
         updateTable();
         saveData();
-        resultLabel.textContent = foodName + "添加成功！";
+        alert(foodName + "添加成功！");
     } else {
-        resultLabel.textContent = "请输入有效的权重值。";
+        alert("权重需要是正数");
     }
 }
 
 function removeSelected() {
     let selectedRows = document.querySelectorAll('#foodTable tbody tr.highlighted');
-    selectedRows.forEach(row => {
-        let foodName = row.cells[0].textContent;
-        delete foods[foodName];
-        delete foodCounts[foodName];
-        tableBody.removeChild(row);
-    });
+    if (selectedRows.length === 0)
+        alert("点击选中上面的食物就可以删除了哦~");
+    else
+        selectedRows.forEach(row => {
+            let foodName = row.cells[0].textContent;
+            delete foods[foodName];
+            delete foodCounts[foodName];
+            tableBody.removeChild(row);
+        });
     saveData();
 }
 

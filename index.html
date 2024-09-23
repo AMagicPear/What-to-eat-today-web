@@ -23,16 +23,19 @@
       </thead>
       <tbody></tbody>
     </table>
-    <div>
+    <div class="bottoms">
       <input type="text" id="foodName" placeholder="在此输入食物名称">
-      <input type="number" id="morningWeight" placeholder="早上权重">
+      <button onclick="addFood()">添加</button>
+      <button onclick="removeSelected()">删除</button><br />
+    </div>
+    <div class="bottoms"><input type="number" id="morningWeight" placeholder="早上权重">
       <input type="number" id="noonWeight" placeholder="中午权重">
       <input type="number" id="eveningWeight" placeholder="晚上权重">
-      <button onclick="addFood()">添加</button>
-      <button onclick="removeSelected()">删除</button><br/>
-      <button onclick="chooseFood()" id="chooseButton">今天吃什么</button>
     </div>
-    <p id="resultLabel"></p>
+    <div class="bottoms">
+      <button onclick="chooseFood()" id="chooseButton">今天吃什么呢</button>
+    </div>
+    <div class="bottoms"><p id="resultLabel"></p></div>
   </div>
   <script src="./script.js"></script>
 </body>
