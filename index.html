@@ -10,11 +10,14 @@
 
 <body>
   <div class="container">
+    <p id="greeting"></p>
     <table id="foodTable">
       <thead>
         <tr>
           <th>食物</th>
-          <th>权重</th>
+          <th>早上权重</th>
+          <th>中午权重</th>
+          <th>晚上权重</th>
           <th>已选次数</th>
         </tr>
       </thead>
@@ -22,7 +25,9 @@
     </table>
     <div>
       <input type="text" id="foodName" placeholder="在此输入食物名称">
-      <input type="number" id="probability" placeholder="在此输入概率">
+      <input type="number" id="morningWeight" placeholder="早上权重">
+      <input type="number" id="noonWeight" placeholder="中午权重">
+      <input type="number" id="eveningWeight" placeholder="晚上权重">
       <button onclick="addFood()">添加</button>
       <button onclick="removeSelected()">删除</button><br/>
       <button onclick="chooseFood()" id="chooseButton">今天吃什么</button>

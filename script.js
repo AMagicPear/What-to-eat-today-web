@@ -2,6 +2,12 @@ let foods = {};
 let foodCounts = {};
 let tableBody = document.querySelector('#foodTable tbody');
 let resultLabel = document.getElementById('resultLabel');
+let greetingLabel = document.getElementById('greeting');
+let timePeriodDic = {
+    morning: "早上",
+    noon: "中午",
+    evening: "晚上"
+};
 
 function init() {
     // 恢复数据
@@ -11,24 +17,31 @@ function init() {
         foodCounts = storedData.foodCounts || {};
         updateTable();
     }
+    updateGreeting();
 }
 
 function addFood() {
     let foodName = document.getElementById('foodName').value;
-    let probability = parseFloat(document.getElementById('probability').value);
+    let morningWeight = parseFloat(document.getElementById('morningWeight').value);
+    let noonWeight = parseFloat(document.getElementById('noonWeight').value);
+    let eveningWeight = parseFloat(document.getElementById('eveningWeight').value);
 
     if (!foodName) {
         resultLabel.textContent = "请输入有效的食物名称。";
     } else if (foodName in foods) {
         resultLabel.textContent = "此食物已存在，不能重复插入。";
-    } else if (!isNaN(probability) && probability >= 0) {
-        foods[foodName] = probability;
+    } else if (!isNaN(morningWeight) && !isNaN(noonWeight) && !isNaN(eveningWeight)) {
+        foods[foodName] = {
+            morning: morningWeight,
+            noon: noonWeight,
+            evening: eveningWeight
+        };
         foodCounts[foodName] = 0;
         updateTable();
         saveData();
         resultLabel.textContent = foodName + "添加成功！";
     } else {
-        resultLabel.textContent = "请输入有效的概率值。";
+        resultLabel.textContent = "请输入有效的权重值。";
     }
 }
 
@@ -44,36 +57,57 @@ function removeSelected() {
 }
 
 function chooseFood() {
-    let totalWeight = Object.values(foods).reduce((sum, weight) => sum + weight, 0);
-    resultLabel.textContent += "总权重："+totalWeight+"<br/>";
-    if(totalWeight === 0) {
+    let currentHour = new Date().getHours();
+    let timePeriod = determineTimePeriod(currentHour);
+    let weightsForTimePeriod = getTimePeriodWeights(timePeriod);
+    let totalWeight = Object.values(weightsForTimePeriod).reduce((sum, weight) => sum + weight, 0);
+
+    if (totalWeight === 0) {
         alert("所有食物的概率不能都为零！");
         return undefined;
     }
+
     let randNum = Math.random() * totalWeight;
-    resultLabel.textContent += "随机数是："+randNum+"<br/>";
     let cumulativeWeight = 0;
-    let food_chosen;
-    for(let food in foods){
-        resultLabel.textContent += "当前食物增加权重："+foods[food]+"<br/>";
-        cumulativeWeight += foods[food];
-        if(randNum <= cumulativeWeight){
-            resultLabel.textContent += "选到啦！";
+
+    for (let food in foods) {
+        cumulativeWeight += weightsForTimePeriod[food];
+        if (randNum <= cumulativeWeight) {
             foodCounts[food]++;
             updateTable();
-            resultLabel.textContent += `今天要吃的食物是${food}！<br/>`;
+            resultLabel.textContent = `今天${timePeriodDic[timePeriod]}要吃的食物是${food}！`;
             saveData();
             return;
         }
     }
 }
 
+function determineTimePeriod(hour) {
+    if (hour >= 6 && hour < 10) {
+        return 'morning';
+    } else if (hour >= 10 && hour < 14) {
+        return 'noon';
+    } else {
+        return 'evening';
+    }
+}
+
+function getTimePeriodWeights(timePeriod) {
+    let weights = {};
+    for (let food in foods) {
+        weights[food] = foods[food][timePeriod];
+        resultLabel.textContent = timePeriod;
+    }
+    return weights;
+}
 function updateTable() {
     tableBody.innerHTML = '';
     for (let food in foods) {
         let newRow = tableBody.insertRow();
         newRow.insertCell().textContent = food;
-        newRow.insertCell().textContent = foods[food];
+        newRow.insertCell().textContent = foods[food].morning;
+        newRow.insertCell().textContent = foods[food].noon;
+        newRow.insertCell().textContent = foods[food].evening;
         newRow.insertCell().textContent = foodCounts[food] || 0;
         newRow.addEventListener('click', function () {
             this.classList.toggle('highlighted');
@@ -83,6 +117,11 @@ function updateTable() {
 
 function saveData() {
     localStorage.setItem('foodData', JSON.stringify({ foods, foodCounts }));
+}
+function updateGreeting() {
+    let currentHour = new Date().getHours();
+    let greeting = timePeriodDic[determineTimePeriod(currentHour)];
+    greetingLabel.textContent = `${greeting}好呀~ 小宝贝~(#^.^#)`;
 }
 
 init();
