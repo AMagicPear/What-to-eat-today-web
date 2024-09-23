@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>食物选择小助手</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container">
+    <table id="foodTable">
+      <thead>
+        <tr>
+          <th>食物</th>
+          <th>权重</th>
+          <th>已选次数</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div>
+      <input type="text" id="foodName" placeholder="在此输入食物名称">
+      <input type="number" id="probability" placeholder="在此输入概率">
+      <button onclick="addFood()">添加</button>
+      <button onclick="removeSelected()">删除</button><br/>
+      <button onclick="chooseFood()" id="chooseButton">今天吃什么</button>
+    </div>
+    <p id="resultLabel"></p>
+  </div>
+  <script src="./script.js"></script>
+</body>
+
+</html>
