@@ -63,7 +63,7 @@ button.pressed{
 }
 #foodTable tbody tr.highlighted{
     background-color: #ef7e2e;
-    transition: 0.4s;
+    transition: 0.3s;
     color: white;
     font-weight: bold;
 }
