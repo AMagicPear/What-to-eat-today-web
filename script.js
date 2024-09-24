@@ -1,5 +1,7 @@
 let foods = {};
 let foodCounts = {};
+let log = []; // 日志记录
+let recentChoices = [];
 let tableBody = document.querySelector('#foodTable tbody');
 let resultLabel = document.getElementById('resultLabel');
 let greetingLabel = document.getElementById('greeting');
@@ -15,6 +17,8 @@ function init() {
     if (storedData) {
         foods = storedData.foods || {};
         foodCounts = storedData.foodCounts || {};
+        log = storedData.log || [];
+        updateRecentChoices();
         updateTable();
     }
     updateGreeting();
@@ -96,8 +100,8 @@ function chooseFood() {
         if (randNum <= cumulativeWeight) {
             foodCounts[food]++;
             log.push(food);
-            updateRecentChoices();
             updateTable();
+            updateRecentChoices();
             resultLabel.textContent = `今天${timePeriodDic[timePeriod]}要吃的食物是${food}！`;
             saveData();
             return;
@@ -138,13 +142,20 @@ function updateTable() {
     }
 }
 
+
 function saveData() {
-    localStorage.setItem('foodData', JSON.stringify({ foods, foodCounts }));
+    localStorage.setItem('foodData', JSON.stringify({
+        foods, foodCounts, log
+    }));
 }
 function updateGreeting() {
     let currentHour = new Date().getHours();
     let greeting = timePeriodDic[determineTimePeriod(currentHour)];
     greetingLabel.textContent = `${greeting}好呀~ 小宝贝~(#^.^#)`;
+}
+
+function updateRecentChoices(){
+    recentChoices = log.slice(-30);
 }
 
 init();
