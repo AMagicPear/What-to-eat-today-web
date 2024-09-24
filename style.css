@@ -5,7 +5,10 @@ body {
 }
 
 .container {
-    margin: 26px;
+    margin: 20px;
+    padding: 20px;
+    background-color: #f8fbf9;
+    border-radius: 12px;
 }
 
 table {
@@ -43,18 +46,22 @@ button {
     border-radius: 5px;
     cursor: pointer;
     width: 20%;
+    transition: 0.3s;
 }
-button:hover{
-    background-color: #66a43c;
+button.pressed{
+    background-color: #d1f1d6;
 }
+
 #chooseButton{
+    margin-top: 15px;
     width: 36%;
     font-weight: bold;
     font-size: large;
     border-radius: 20px;
 }
 #foodTable tbody tr.highlighted{
-    background-color: #d1f1d6;;
+    background-color: #d1f1d6;
+    transition: 0.4s;
 }
 .bottoms{
     display: flex;

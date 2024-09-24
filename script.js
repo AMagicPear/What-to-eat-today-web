@@ -18,6 +18,24 @@ function init() {
         updateTable();
     }
     updateGreeting();
+    document.addEventListener("DOMContentLoaded", function () {
+        var buttons = document.querySelectorAll('button');
+        buttons.forEach(function (button) {
+            button.addEventListener('mousedown', function () {
+                this.classList.add('pressed');
+            });
+            button.addEventListener('mouseup', function () {
+                this.classList.remove('pressed');
+            });
+            // 支持触摸设备
+            button.addEventListener('touchstart', function () {
+                this.classList.add('pressed');
+            });
+            button.addEventListener('touchend', function () {
+                this.classList.remove('pressed');
+            });
+        });
+    });
 }
 
 function addFood() {
