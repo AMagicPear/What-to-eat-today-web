@@ -61,7 +61,7 @@ function addFood() {
         foodCounts[foodName] = 0;
         updateTable();
         saveData();
-        alert(foodName + "添加成功！");
+        console.log(foodName + "添加成功！");
     } else {
         alert("权重需要是正数");
     }
@@ -84,20 +84,22 @@ function removeSelected() {
 function chooseFood() {
     let currentHour = new Date().getHours();
     let timePeriod = determineTimePeriod(currentHour);
-    let weightsForTimePeriod = getTimePeriodWeights(timePeriod);
+    let validFoods = getValidFoods();
+    console.log(`当前可选食物：${validFoods}`);
+    let weightsForTimePeriod = getTimePeriodWeights(timePeriod, validFoods);
+    console.log(weightsForTimePeriod);
     let totalWeight = Object.values(weightsForTimePeriod).reduce((sum, weight) => sum + weight, 0);
-
     if (totalWeight === 0) {
-        alert("所有食物的概率不能都为零！");
+        alert("当前时段所有可选食物的概率都为零。无法选择！");
         return undefined;
     }
-
     let randNum = Math.random() * totalWeight;
     let cumulativeWeight = 0;
-
-    for (let food in foods) {
+    for (let i in validFoods) {
+        let food = validFoods[i];
         cumulativeWeight += weightsForTimePeriod[food];
-        if (randNum <= cumulativeWeight) {
+        if (cumulativeWeight >= randNum) {
+            console.log(`选择了${food}`);
             foodCounts[food]++;
             log.push(food);
             updateTable();
@@ -107,6 +109,20 @@ function chooseFood() {
             return;
         }
     }
+}
+function getValidFoods() {
+    let lastTwoChoices = log.slice(-2);
+    console.log(`最近两次的选择：${lastTwoChoices}`);
+    let validFoods = [];
+    //检查过去30次的选择记录
+    let neverChosenFoods = Object.keys(foods).filter(food => !recentChoices.includes(food));
+    if (neverChosenFoods.length === 0) {
+        console.log("过去30次内没有没被选中的食物，将随机选择。");
+        validFoods = Object.keys(foods).filter(food => !(lastTwoChoices[0] === food && lastTwoChoices[1] === food));
+    } else {
+        validFoods = neverChosenFoods;
+    }
+    return validFoods;
 }
 
 function determineTimePeriod(hour) {
@@ -119,12 +135,10 @@ function determineTimePeriod(hour) {
     }
 }
 
-function getTimePeriodWeights(timePeriod) {
+function getTimePeriodWeights(timePeriod, validFoods) {
+    console.log("读取时间：" + timePeriod);
     let weights = {};
-    for (let food in foods) {
-        weights[food] = foods[food][timePeriod];
-        resultLabel.textContent = timePeriod;
-    }
+    validFoods.forEach(validFood => { weights[validFood] = foods[validFood][timePeriod]; })
     return weights;
 }
 function updateTable() {
@@ -154,7 +168,7 @@ function updateGreeting() {
     greetingLabel.textContent = `${greeting}好呀~ 小宝贝~(#^.^#)`;
 }
 
-function updateRecentChoices(){
+function updateRecentChoices() {
     recentChoices = log.slice(-30);
 }
 
