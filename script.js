@@ -95,6 +95,8 @@ function chooseFood() {
         cumulativeWeight += weightsForTimePeriod[food];
         if (randNum <= cumulativeWeight) {
             foodCounts[food]++;
+            log.push(food);
+            updateRecentChoices();
             updateTable();
             resultLabel.textContent = `今天${timePeriodDic[timePeriod]}要吃的食物是${food}！`;
             saveData();
