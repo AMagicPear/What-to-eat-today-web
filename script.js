@@ -7,6 +7,7 @@ let resultLabel = document.getElementById('resultLabel');
 let greetingLabel = document.getElementById('greeting');
 let timePeriodDic = {
     morning: "早上",
+    brunch: '早中',
     noon: "中午",
     evening: "晚上"
 };
@@ -46,10 +47,11 @@ function init() {
     tableBody.addEventListener('click', function (event) {
         selectedRows = document.querySelectorAll('#foodTable tbody tr.highlighted');
     });
-    document.getElementById('editButton').addEventListener('click', function () {
-        if (editing) leaveEditMode();
-        else enterEditMode();
-    })
+}
+
+function editSelected() {
+    if (editing) leaveEditMode();
+    else enterEditMode();
 }
 function clearInputs() {
     document.getElementById('foodName').value = '';
@@ -85,7 +87,7 @@ function addFood() {
     let noonWeight = parseFloat(document.getElementById('noonWeight').value);
     let eveningWeight = parseFloat(document.getElementById('eveningWeight').value);
 
-    if (!foodName) {
+    if (!foodName || foodName.length === 0) {
         alert("请输入有效的食物名称。");
     } else if (foodName in foods) {
         alert("此食物已存在，不能重复插入。");
@@ -106,8 +108,10 @@ function addFood() {
 }
 
 function removeSelected() {
-    if (selectedRows.length === 0)
+    if (selectedRows.length === 0) {
         alert("点击选中上面的食物就可以删除了哦~");
+        return;
+    }
     else
         selectedRows.forEach(row => {
             let foodName = row.cells[0].textContent;
@@ -132,7 +136,7 @@ function chooseFood() {
     }
     let randNum = Math.random() * totalWeight;
     let cumulativeWeight = 0;
-    for (let i in validFoods) {
+    for (let i = 0; i < validFoods.length; i++) {
         let food = validFoods[i];
         cumulativeWeight += weightsForTimePeriod[food];
         if (cumulativeWeight >= randNum) {
@@ -163,9 +167,11 @@ function getValidFoods() {
 }
 
 function determineTimePeriod(hour) {
-    if (hour >= 6 && hour < 10) {
+    if (hour >= 6 && hour < 9) {
         return 'morning';
-    } else if (hour >= 10 && hour < 14) {
+    } else if (hour >= 9 && hour < 11) {
+        return 'brunch'; // 新增早中饭时间段
+    } else if (hour >= 11 && hour < 14) {
         return 'noon';
     } else {
         return 'evening';
@@ -175,7 +181,13 @@ function determineTimePeriod(hour) {
 function getTimePeriodWeights(timePeriod, validFoods) {
     console.log("读取时间：" + timePeriod);
     let weights = {};
-    validFoods.forEach(validFood => { weights[validFood] = foods[validFood][timePeriod]; })
+    validFoods.forEach(validFood => {
+        if (timePeriod === 'brunch') { // 新增早中饭时间段
+            weights[validFood] = foods[validFood].morning + foods[validFood].noon;
+        } else {
+            weights[validFood] = foods[validFood][timePeriod];
+        }
+    });
     return weights;
 }
 function updateTable() {
