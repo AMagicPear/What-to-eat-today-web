@@ -155,14 +155,34 @@ function getValidFoods() {
     let lastTwoChoices = log.slice(-2);
     console.log(`最近两次的选择：${lastTwoChoices}`);
     let validFoods = [];
-    //检查过去30次的选择记录
-    let neverChosenFoods = Object.keys(foods).filter(food => !recentChoices.includes(food));
-    if (neverChosenFoods.length === 0) {
-        console.log("过去30次内没有没被选中的食物，将随机选择。");
-        validFoods = Object.keys(foods).filter(food => !(lastTwoChoices[0] === food && lastTwoChoices[1] === food));
+
+    // 获取所有选中的行中的食物名称
+    let selectedFoodNames = Array.from(selectedRows).map(row => row.cells[0].textContent);
+
+    // 如果有行被选中
+    if (selectedRows.length > 0) {
+        console.log("有行被选中，仅考虑选中的行中的食物。");
+
+        // 检查过去30次的选择记录
+        let neverChosenFoods = selectedFoodNames.filter(food => !recentChoices.includes(food));
+
+        if (neverChosenFoods.length === 0) {
+            console.log("过去30次内没有没被选中的食物，将随机选择。");
+            validFoods = selectedFoodNames.filter(food => !(lastTwoChoices[0] === food && lastTwoChoices[1] === food));
+        } else {
+            validFoods = neverChosenFoods;
+        }
     } else {
-        validFoods = neverChosenFoods;
+        // 检查过去30次的选择记录
+        let neverChosenFoods = Object.keys(foods).filter(food => !recentChoices.includes(food));
+        if (neverChosenFoods.length === 0) {
+            console.log("过去30次内没有没被选中的食物，将随机选择。");
+            validFoods = Object.keys(foods).filter(food => !(lastTwoChoices[0] === food && lastTwoChoices[1] === food));
+        } else {
+            validFoods = neverChosenFoods;
+        }
     }
+
     return validFoods;
 }
 
@@ -203,6 +223,7 @@ function updateTable() {
             this.classList.toggle('highlighted');
         });
     }
+    selectedRows = []; //清空已选择的行
 }
 
 
