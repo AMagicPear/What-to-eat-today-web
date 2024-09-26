@@ -10,6 +10,8 @@ let timePeriodDic = {
     noon: "中午",
     evening: "晚上"
 };
+let editing = false; //用于跟踪是否处于编辑模式
+let selectedRows = []; // 用于存储选中的行
 
 function init() {
     // 恢复数据
@@ -40,7 +42,42 @@ function init() {
             });
         });
     });
+    // 更新选择行的监听器
+    tableBody.addEventListener('click', function (event) {
+        selectedRows = document.querySelectorAll('#foodTable tbody tr.highlighted');
+    });
+    document.getElementById('editButton').addEventListener('click', function () {
+        if (editing) leaveEditMode();
+        else enterEditMode();
+    })
 }
+function clearInputs() {
+    document.getElementById('foodName').value = '';
+    document.getElementById('morningWeight').value = '';
+    document.getElementById('noonWeight').value = '';
+    document.getElementById('eveningWeight').value = '';
+}
+
+function enterEditMode() {
+    if (selectedRows.length !== 1) { alert("请选择单行进行编辑"); return; }
+    editing = true;
+    document.getElementById('editButton').innerText = '提交';
+    document.getElementById('foodName').value = selectedRows[0].cells[0].textContent;
+    document.getElementById('morningWeight').value = selectedRows[0].cells[1].textContent;
+    document.getElementById('noonWeight').value = selectedRows[0].cells[2].textContent;
+    document.getElementById('eveningWeight').value = selectedRows[0].cells[3].textContent;
+}
+
+function leaveEditMode() {
+    editing = false;
+    document.getElementById('editButton').innerText = '编辑';
+    selectedRows[0].cells[0].textContent = document.getElementById('foodName').value;
+    selectedRows[0].cells[1].textContent = document.getElementById('morningWeight').value;
+    selectedRows[0].cells[2].textContent = document.getElementById('noonWeight').value;
+    selectedRows[0].cells[3].textContent = document.getElementById('eveningWeight').value;
+    clearInputs();
+}
+
 
 function addFood() {
     let foodName = document.getElementById('foodName').value;
@@ -65,10 +102,10 @@ function addFood() {
     } else {
         alert("权重需要是正数");
     }
+    clearInputs();
 }
 
 function removeSelected() {
-    let selectedRows = document.querySelectorAll('#foodTable tbody tr.highlighted');
     if (selectedRows.length === 0)
         alert("点击选中上面的食物就可以删除了哦~");
     else
