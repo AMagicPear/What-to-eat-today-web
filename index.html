@@ -1,46 +1,31 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8" />
+    <title>Ionic App</title>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>食物选择小助手</title>
-  <link rel="stylesheet" href="style.css">
-</head>
+    <base href="/" />
 
-<body>
-  <div class="container">
-    <p id="greeting"></p>
-    <table id="foodTable">
-      <thead>
-        <tr class="tablet">
-          <th>食物</th>
-          <th>早上权重</th>
-          <th>中午权重</th>
-          <th>晚上权重</th>
-          <th>已选次数</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-    <div class="bottoms">
-      <label for="foodName"></label><input type="text" id="foodName" placeholder="在此输入食物名称">
-      <button onclick="addFood()">添加</button>
-      <button onclick="removeSelected()">删除</button>
-      <button onclick="editSelected()" id="editButton">编辑</button>
-    </div>
-    <div class="bottoms">
-      <label for="morningWeight"></label><input type="number" id="morningWeight" placeholder="早上权重">
-      <label for="noonWeight"></label><input type="number" id="noonWeight" placeholder="中午权重">
-      <label for="eveningWeight"></label><input type="number" id="eveningWeight" placeholder="晚上权重">
-    </div>
-    <div class="bottoms">
-      <button onclick="chooseFood()" id="chooseButton">今天吃什么呢 😋</button>
-    </div>
-    <div class="bottoms"><p id="resultLabel"></p></div>
-    <p id="tip">食物选择小助手 v2.0<br/>一只会魔法的梨© 专属定制版</p>
-  </div>
-  <script src="./script.js"></script>
-</body>
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="viewport"
+      content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+
+    <link rel="shortcut icon" type="image/png" href="/favicon.png" />
+
+    <!-- add to homescreen for ios -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Ionic App" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  </head>
+
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
 
 </html>
+

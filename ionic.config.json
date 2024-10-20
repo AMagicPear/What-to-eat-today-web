@@ -1,0 +1,7 @@
+{
+  "name": "what-to-eat-today",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}
