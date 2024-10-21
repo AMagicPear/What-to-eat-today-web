@@ -1,0 +1,1 @@
+import{d as s,c as n,w as e,u as a,o as r,a as o,j as l,f as _,h as c,i as f,_ as u}from"./index-BktiNICj.js";const d=s({__name:"MyProfile",setup(p){return(i,t)=>(r(),n(a(f),null,{default:e(()=>[o(a(c),null,{default:e(()=>[o(a(l),{class:"make-central"},{default:e(()=>t[0]||(t[0]=[_("简介页面")])),_:1})]),_:1})]),_:1}))}}),x=u(d,[["__scopeId","data-v-16e501fc"]]);export{x as default};

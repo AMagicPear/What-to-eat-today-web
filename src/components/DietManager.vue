@@ -25,8 +25,11 @@ import { IonPage, IonTabs, IonRouterOutlet, IonTabBar, IonTabButton, IonLabel, I
 
 import { create, fastFood, person } from 'ionicons/icons';
 import { StatusBar, Style } from '@capacitor/status-bar';
-StatusBar.setOverlaysWebView({ overlay:true});
-StatusBar.setStyle({ style: Style.Light })
+import { isPlatform } from '@ionic/vue';
+if (isPlatform('hybrid')) {
+  StatusBar.setOverlaysWebView({ overlay: true });
+  StatusBar.setStyle({ style: Style.Light })
+}
 
 export default {
   components: { IonPage, IonTabs, IonRouterOutlet, IonTabBar, IonTabButton, IonLabel, IonIcon },

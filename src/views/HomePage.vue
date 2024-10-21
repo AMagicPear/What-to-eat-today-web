@@ -1,13 +1,13 @@
 <template>
   <ion-page>
     <ion-content>
-      <div class="make-central">显示吃什么的页面</div>
+      <ion-note class="make-central">显示吃什么的页面</ion-note>
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonContent } from '@ionic/vue';
+import { IonPage, IonContent,IonNote } from '@ionic/vue';
 </script>
 
 <style scoped>

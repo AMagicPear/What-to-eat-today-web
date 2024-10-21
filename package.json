@@ -8,8 +8,8 @@
     "email": "AMagicPear@outlook.com"
   },
   "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc && vite build",
+    "dev": "ionic serve",
+    "build": "ionic build",
     "preview": "vite preview",
     "test:e2e": "cypress run",
     "test:unit": "vitest",

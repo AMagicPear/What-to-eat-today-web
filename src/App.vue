@@ -2,7 +2,6 @@
   <ion-app>
     <ion-router-outlet />
   </ion-app>
-  <person-learn />
 </template>
 
 <script lang="ts">
