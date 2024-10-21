@@ -1,5 +1,6 @@
 <template>
   <ion-page>
+    
     <ion-tabs>
       <ion-router-outlet></ion-router-outlet>
       <ion-tab-bar slot="bottom">
@@ -24,12 +25,6 @@
 import { IonPage, IonTabs, IonRouterOutlet, IonTabBar, IonTabButton, IonLabel, IonIcon } from '@ionic/vue';
 
 import { create, fastFood, person } from 'ionicons/icons';
-import { StatusBar, Style } from '@capacitor/status-bar';
-import { isPlatform } from '@ionic/vue';
-if (isPlatform('hybrid')) {
-  StatusBar.setOverlaysWebView({ overlay: true });
-  StatusBar.setStyle({ style: Style.Light })
-}
 
 export default {
   components: { IonPage, IonTabs, IonRouterOutlet, IonTabBar, IonTabButton, IonLabel, IonIcon },

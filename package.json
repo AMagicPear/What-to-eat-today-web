@@ -9,6 +9,7 @@
   },
   "scripts": {
     "dev": "ionic serve",
+    "dev-a": "ionic cap run android -l --external",
     "build": "ionic build",
     "preview": "vite preview",
     "test:e2e": "cypress run",

@@ -9,14 +9,8 @@
       </ion-fab>
     </ion-content>
     <ion-alert header="添加食物" trigger="add-button" :buttons=alertButtons :inputs=alertInputs></ion-alert>
-    <ion-toast
-      :is-open="isAdmitSuccessOpen"
-      message="提交成功！"
-      :duration="2000"
-      @didDismiss="setAdmitSuccessOpen(false)"
-      position="bottom"
-      position-anchor="footer"
-    ></ion-toast>
+    <ion-toast :is-open="isAdmitSuccessOpen" message="添加成功！" :duration="2000"
+      @didDismiss="setAdmitSuccessOpen(false)"></ion-toast>
   </ion-page>
 </template>
 
@@ -25,11 +19,11 @@
 </script>
 
 <script setup lang="ts">
-import { IonPage, IonContent, IonFab, IonFabButton, IonIcon, IonNote, IonAlert,IonToast } from '@ionic/vue';
+import { IonPage, IonContent, IonFab, IonFabButton, IonIcon, IonNote, IonAlert, IonToast } from '@ionic/vue';
 import { add } from 'ionicons/icons';
-import {ref} from 'vue';
+import { ref } from 'vue';
 const isAdmitSuccessOpen = ref(false);
-const setAdmitSuccessOpen = (state:boolean)=>{
+const setAdmitSuccessOpen = (state: boolean) => {
   isAdmitSuccessOpen.value = state;
 }
 const alertButtons = [
@@ -37,28 +31,28 @@ const alertButtons = [
     text: '取消',
     role: 'cancel',
     handler: () => {
-      console.log('取消');
+      console.log('食物添加已取消');
     },
   },
   {
-    text:'提交',
-    role: 'admit',
-    handler:()=>{
-      console.log('提交');
-      setAdmitSuccessOpen(true);
+    text: '添加',
+    handler: (data: any) => {
+      console.log('添加');
+      console.log(data);
+      setAdmitSuccessOpen(true); //显示条形通知，表示添加成功
     }
   }
 ];
 const alertInputs = [
   {
-    placeholder:'食物名称',
+    placeholder: '食物名称',
   },
   {
     type: 'number',
-    placeholder:'权重',
+    placeholder: '权重',
     min: 0,
   },
-]
+];
 </script>
 
 <style scoped>
