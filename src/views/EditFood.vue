@@ -15,13 +15,25 @@
 </template>
 
 <script lang="ts">
+class Food {
+  name: string;
+  weight: number;
+  counts: number;
 
+  constructor(name: string, weight: number, counts: number = 0) {
+    this.name = name;
+    this.weight = weight;
+    this.counts = counts;
+  }
+}
+const foodList = ref<Food[]>([]);
 </script>
 
 <script setup lang="ts">
 import { IonPage, IonContent, IonFab, IonFabButton, IonIcon, IonNote, IonAlert, IonToast } from '@ionic/vue';
 import { add } from 'ionicons/icons';
 import { ref } from 'vue';
+//页面逻辑
 const isAdmitSuccessOpen = ref(false);
 const setAdmitSuccessOpen = (state: boolean) => {
   isAdmitSuccessOpen.value = state;
@@ -31,28 +43,34 @@ const alertButtons = [
     text: '取消',
     role: 'cancel',
     handler: () => {
-      console.log('食物添加已取消');
+      console.log('取消');
     },
   },
   {
     text: '添加',
     handler: (data: any) => {
       console.log('添加');
-      console.log(data);
+      foodList.value?.push(new Food(data.foodName, data.foodWeight));
+      console.log(foodList.value);
       setAdmitSuccessOpen(true); //显示条形通知，表示添加成功
     }
   }
 ];
 const alertInputs = [
   {
+    name: 'foodName',
     placeholder: '食物名称',
   },
   {
+    name: 'foodWeight',
     type: 'number',
     placeholder: '权重',
     min: 0,
   },
 ];
+
+//读取食物信息
+
 </script>
 
 <style scoped>
