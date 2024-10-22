@@ -8,8 +8,9 @@
     "email": "AMagicPear@outlook.com"
   },
   "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc && vite build",
+    "dev": "ionic serve",
+    "dev-a": "ionic cap run android -l --external",
+    "build": "ionic build",
     "preview": "vite preview",
     "test:e2e": "cypress run",
     "test:unit": "vitest",
@@ -21,7 +22,8 @@
     "@capacitor/core": "6.1.2",
     "@capacitor/haptics": "6.0.1",
     "@capacitor/keyboard": "6.0.2",
-    "@capacitor/status-bar": "6.0.1",
+    "@capacitor/status-bar": "^6.0.1",
+    "@ionic/storage": "^4.0.0",
     "@ionic/vue": "^8.0.0",
     "@ionic/vue-router": "^8.0.0",
     "ionicons": "^7.0.0",
