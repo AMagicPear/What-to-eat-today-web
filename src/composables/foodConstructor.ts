@@ -22,6 +22,11 @@ class Food {
         return new Food(json.name, json.weight, json.counts);
     }
 }
+export interface IFood {
+    name: string;
+    weight: number;
+    counts: number;
+}
 const foodList = ref<Food[]>([]);
 
 export const FoodConstructor = () => {

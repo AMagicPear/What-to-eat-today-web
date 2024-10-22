@@ -1,0 +1,1 @@
+import{d as o,c as s,w as e,u as a,b as r,e as n,I as l,f as u,i as f,j as c}from"./index-B1ZvEb2v.js";const i=o({__name:"MyProfile",setup(_){return(d,t)=>(r(),s(a(c),null,{default:e(()=>[n(a(f),null,{default:e(()=>[n(a(l),{class:"make-central"},{default:e(()=>t[0]||(t[0]=[u("显示个人信息")])),_:1})]),_:1})]),_:1}))}});export{i as default};
