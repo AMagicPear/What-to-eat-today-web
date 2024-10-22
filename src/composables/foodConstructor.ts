@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import storage from './storage';
-import { message } from '@/views/EditFood.vue';
+// import { message } from '@/views/EditFood.vue';
 class Food {
     name: string;
     weight: number;
@@ -24,7 +24,7 @@ class Food {
 }
 const foodList = ref<Food[]>([]);
 
-export const FoodCalculator = () => {
+export const FoodConstructor = () => {
     const loadFoods = async () => {
         console.log("正在加载食物，加载前：");
         console.log(foodList.value);
@@ -33,8 +33,6 @@ export const FoodCalculator = () => {
         console.log(storedFoods);
         if (storedFoods)
             foodList.value = storedFoods.map((food: any) => Food.fromStorage(food));
-        console.log("加载后：");
-        console.log(foodList.value);
     }
     const saveFoods = async () => {
         const plainFoods = foodList.value.map(food => food.toStorage());
@@ -43,6 +41,7 @@ export const FoodCalculator = () => {
     }
     const addFood = async (name: string, weight: number) => {
         if (foodList.value.find(food => food.name === name)) {
+            const {message} = await import('@/views/EditFood.vue');
             message.value = "已经存在该食物，请勿重复添加";
             return false;
         }
@@ -59,8 +58,8 @@ export const FoodCalculator = () => {
     }
 
     return {
-        loadFoods,
         foodList,
+        loadFoods,
         addFood,
         saveFoods,
         deleteFood,

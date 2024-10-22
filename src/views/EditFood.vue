@@ -18,8 +18,8 @@
 import { IonPage, IonContent, IonFab, IonFabButton, IonIcon, IonNote, IonAlert, IonToast } from '@ionic/vue';
 import { add } from 'ionicons/icons';
 import { ref, onMounted } from 'vue';
-import { FoodCalculator } from '@/composables/foodCalculator';
-const { foodList, addFood, loadFoods } = FoodCalculator();
+import { FoodConstructor } from '@/composables/foodConstructor';
+const { foodList, addFood, loadFoods } = FoodConstructor();
 export const message = ref<string | null>(null);
 </script>
 
@@ -70,7 +70,10 @@ const alertInputs = [
   },
 ];
 onMounted(() => {
-  loadFoods();
+  loadFoods().then(()=>{
+    console.log("加载食物列表：");
+    console.log(foodList.value);
+  })
 })
 </script>
 
