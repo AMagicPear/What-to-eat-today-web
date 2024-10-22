@@ -1,20 +1,24 @@
 <template>
   <ion-page>
     <ion-content>
-      <ion-note class="make-central">显示吃什么的页面</ion-note>
+      <ion-note>{{ timeNow }}</ion-note><br>
+      <ion-button @click="chooseFood()">选择食物</ion-button>
     </ion-content>
   </ion-page>
 </template>
-
-<script setup lang="ts">
-import { IonPage, IonContent,IonNote } from '@ionic/vue';
+<script lang="ts">
+function updateTime(){
+  timeNow.value = new Date();
+}
 </script>
 
-<style scoped>
-.make-central {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-}
-</style>
+<script setup lang="ts">
+import { IonPage, IonContent, IonNote, IonButton } from '@ionic/vue';
+import { timeNow, chooseFood } from '@/composables/foodSelector';
+import { onMounted } from 'vue';
+onMounted(() => {
+  setInterval(updateTime,1000);
+})
+</script>
+
+<style scoped></style>

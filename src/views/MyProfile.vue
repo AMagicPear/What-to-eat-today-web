@@ -11,10 +11,4 @@ import { IonPage, IonContent,IonNote } from '@ionic/vue';
 </script>
 
 <style scoped>
-.make-central {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-}
 </style>

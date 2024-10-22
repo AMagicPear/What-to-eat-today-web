@@ -13,8 +13,17 @@ if (isPlatform('hybrid')) {
   StatusBar.setOverlaysWebView({ overlay: true });
   StatusBar.setStyle({ style: Style.Light })
 }
+
 export default defineComponent({
   name: 'App',
   components: { IonApp, IonRouterOutlet },
 })
 </script>
+<style>
+.make-central {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+</style>

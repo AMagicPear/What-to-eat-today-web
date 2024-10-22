@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import storage from './storage';
-import { errorMessage } from '@/views/EditFood.vue';
+import { message } from '@/views/EditFood.vue';
 class Food {
     name: string;
     weight: number;
@@ -43,7 +43,7 @@ export const FoodCalculator = () => {
     }
     const addFood = async (name: string, weight: number) => {
         if (foodList.value.find(food => food.name === name)) {
-            errorMessage.value = "已经存在该食物，请勿重复添加";
+            message.value = "已经存在该食物，请勿重复添加";
             return false;
         }
         console.log(`正在添加食物${name}，${weight}`);

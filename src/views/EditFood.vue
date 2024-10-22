@@ -9,10 +9,8 @@
       </ion-fab>
     </ion-content>
     <ion-alert header="添加食物" trigger="add-button" :buttons=alertButtons :inputs=alertInputs></ion-alert>
-    <ion-toast :is-open="isAdmitSuccessOpen" message="添加成功！" :duration="2000"
-      @didDismiss="isAdmitSuccessOpen = false"></ion-toast>
-    <ion-toast :is-open="errorMessage" :message="errorMessage" :duration="2000"
-      @didDismiss="errorMessage = null"></ion-toast>
+    <ion-toast :is-open="message" :message="message" :duration="2000"
+      @didDismiss="message = null"></ion-toast>
   </ion-page>
 </template>
 
@@ -22,18 +20,17 @@ import { add } from 'ionicons/icons';
 import { ref, onMounted } from 'vue';
 import { FoodCalculator } from '@/composables/foodCalculator';
 const { foodList, addFood, loadFoods } = FoodCalculator();
-export const errorMessage = ref<string | null>(null);
+export const message = ref<string | null>(null);
 </script>
 
 <script setup lang="ts">
 //页面逻辑
-const isAdmitSuccessOpen = ref(false);
 const alertButtons = [
   {
     text: '取消',
     role: 'cancel',
     handler: () => {
-      errorMessage.value = null;
+      message.value = null;
       console.log('已取消添加食物');
     },
   },
@@ -41,14 +38,17 @@ const alertButtons = [
     text: '添加',
     handler: async (data: any) => {
       if (!(data.foodName && data.foodWeight)) {
-        console.log('食物未输入')
-        errorMessage.value = '请输入正确的食物名称和重量'; //显示条形通知，提示格式不正确
+        console.log('食物未输入');
+        message.value = '请输入食物名称和权重后再提交'; //显示条形通知，提示格式不正确
+        return false;
+      } else if (data.foodWeight < 0) {
+        message.value = '权重不能是负数！';
         return false;
       }
       else {
         console.log(`准备添加食物${data.foodName}，${data.foodWeight}`);
         if (await addFood(data.foodName, data.foodWeight)) {
-          isAdmitSuccessOpen.value = true; //显示条形通知，表示添加成功
+          message.value = `${data.foodName}添加成功！`; //显示条形通知，表示添加成功
           return true;
         } else {
           return false;
@@ -75,13 +75,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.make-central {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-}
-
 #add-button {
   margin: 2vw;
 }
