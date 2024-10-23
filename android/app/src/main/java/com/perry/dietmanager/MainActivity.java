@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package com.perry.dietmanager;
 
 import com.getcapacitor.BridgeActivity;
 

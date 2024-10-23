@@ -26,6 +26,7 @@
     "@ionic/storage": "^4.0.0",
     "@ionic/vue": "^8.0.0",
     "@ionic/vue-router": "^8.0.0",
+    "@tauri-apps/cli": "^2.0.4",
     "ionicons": "^7.0.0",
     "vite-plugin-vue-setup-extend": "^0.4.0",
     "vue": "^3.3.0",
