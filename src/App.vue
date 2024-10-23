@@ -1,5 +1,5 @@
 <template>
-  <ion-app>
+  <ion-app >
     <ion-router-outlet />
   </ion-app>
 </template>
@@ -10,11 +10,14 @@ import { defineComponent } from 'vue';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { isPlatform } from '@ionic/vue';
 if (isPlatform('hybrid')) {
-  StatusBar.setOverlaysWebView({ overlay: true });
   StatusBar.setStyle({ style: Style.Light })
+  StatusBar.setBackgroundColor({color:'#ffffff'})
 }
+
 export default defineComponent({
   name: 'App',
   components: { IonApp, IonRouterOutlet },
 })
 </script>
+<style>
+</style>

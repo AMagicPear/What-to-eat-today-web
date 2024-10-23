@@ -1,6 +1,5 @@
 <template>
   <ion-page>
-    
     <ion-tabs>
       <ion-router-outlet></ion-router-outlet>
       <ion-tab-bar slot="bottom">
@@ -37,3 +36,5 @@ export default {
   },
 };
 </script>
+<style>
+</style>
