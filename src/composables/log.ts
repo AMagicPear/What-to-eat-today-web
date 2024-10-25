@@ -25,6 +25,5 @@ export const Log = () => {
     loadLog();  //在组件初始化时加载日志记录
     return {
         saveLog,
-        loadLog,
     }
 }

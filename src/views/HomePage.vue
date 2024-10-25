@@ -18,8 +18,6 @@
 function updateTime() {
   timeNow.value = new Date();
 }
-import { Log } from '@/composables/log';
-const { loadLog } = Log();
 </script>
 
 <script setup lang="ts">
@@ -29,7 +27,6 @@ import { onMounted, ref } from 'vue';
 import { IFood } from '@/composables/foodConstructor';
 onMounted(() => {
   setInterval(updateTime, 60000);
-  loadLog();
 })
 
 const selectedFood = ref<IFood>();
