@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import storage from './storage';
-// import { message } from '@/views/EditFood.vue';
+
 class Food {
     name: string;
     weight: number;

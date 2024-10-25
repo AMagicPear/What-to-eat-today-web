@@ -1,30 +1,30 @@
-import { ref } from 'vue';
+import { ref,computed,ComputedRef } from 'vue';
 export const timeNow = ref(new Date());
 import { FoodConstructor } from './foodConstructor';
 const { foodList, loadFoods, saveFoods } = FoodConstructor();
 
 import { Log } from './log'
-const { saveLog } = Log();
-
-export const determineTimePeriod = (time: Date) => {
-    const hour = time.getHours();
-    if (hour >= 6 && hour < 9) {
-        return 'morning';
-    } else if (hour >= 9 && hour < 11) {
-        return 'brunch';
-    } else if (hour >= 11 && hour < 14) {
-        return 'noon';
-    } else {
-        return 'evening';
-    }
-}
+const { saveLog } =  Log();
 
 const getValidFoods = async () => {
     await loadFoods();
-    // const timePeriod = determineTimePeriod(timeNow.value);
+    // timePeriod;
     const validFoods = foodList.value;
     return validFoods;
 }
+
+export const timePeriod: ComputedRef<string> = computed(() => {
+    const hour = timeNow.value.getHours();
+    if (hour >= 6 && hour < 9) {
+      return '早';
+    } else if (hour >= 9 && hour < 11) {
+      return '早中';
+    } else if (hour >= 11 && hour < 14) {
+      return '午';
+    } else {
+      return '晚';
+    }
+  })
 
 export const selectFood = async () => {
     const validFoods = await getValidFoods();

@@ -26,7 +26,7 @@
         </ion-item-sliding>
       </ion-list>
     </ion-content>
-    <ion-note class="ion-padding" style="text-align: center;">TIP：<br/>点击右侧+号添加食物 滑动来编辑或删除<br/>所占权重越大，食物被选中的几率更高</ion-note>
+    <ion-note class="ion-padding" style="text-align: center;"><span v-html="bottomTip"></span></ion-note>
     <ion-fab slot="fixed" vertical="bottom" horizontal="end" id="add-button">
       <ion-fab-button>
         <ion-icon :icon="add"></ion-icon>
@@ -48,6 +48,7 @@ export const message = ref<string | null>(null);
 
 <script setup lang="ts">
 //页面逻辑
+const bottomTip = `TIP：<br/>点击右侧+号添加食物 滑动来编辑或删除<br/>所占权重越大，食物被选中的几率更高`;
 const alertButtons = [
   {
     text: '取消',

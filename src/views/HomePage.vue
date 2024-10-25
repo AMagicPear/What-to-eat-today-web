@@ -8,7 +8,7 @@
     <ion-content class="ion-padding">
       <ion-note>{{ timeNow }}</ion-note>
       <ion-button @click="selectFood().then(food => selectedFood = food)">选择食物</ion-button><br />
-      <ion-label>今天要吃的食物是：
+      <ion-label>今天的{{ timePeriod }}饭要吃的食物是：<br />
       </ion-label>
       <ion-label style="text-align: center;">{{ selectedFood?.name }}</ion-label>
     </ion-content>
@@ -18,20 +18,20 @@
 function updateTime() {
   timeNow.value = new Date();
 }
-// import { determineTimePeriod } from '@/composables/foodSelector';
 import { Log } from '@/composables/log';
 const { loadLog } = Log();
 </script>
 
 <script setup lang="ts">
 import { IonPage, IonContent, IonNote, IonButton, IonHeader, IonToolbar, IonTitle, IonLabel } from '@ionic/vue';
-import { timeNow, selectFood } from '@/composables/foodSelector';
+import { timeNow, selectFood, timePeriod } from '@/composables/foodSelector';
 import { onMounted, ref } from 'vue';
 import { IFood } from '@/composables/foodConstructor';
 onMounted(() => {
-  setInterval(updateTime, 1000);
+  setInterval(updateTime, 60000);
   loadLog();
 })
+
 const selectedFood = ref<IFood>();
 </script>
 
