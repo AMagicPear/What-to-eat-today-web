@@ -15,7 +15,9 @@
         <ion-item-sliding v-for="food in foodList" :key="food.name">
           <ion-item>
             <ion-label>{{ food.name }}</ion-label>
-            <ion-badge slot="end">{{ food.weight }}</ion-badge>
+            <ion-badge slot="end">早 {{ food.weight.morning }}</ion-badge>
+            <ion-badge slot="end">午 {{ food.weight.noon }}</ion-badge>
+            <ion-badge slot="end">晚 {{ food.weight.evening }}</ion-badge>
             <ion-badge slot="end" color="secondary">{{ food.counts }}</ion-badge>
           </ion-item>
           <ion-item-options side="end">
@@ -38,10 +40,10 @@
 </template>
 
 <script lang="ts">
-import { IonPage, IonContent, IonFab, IonFabButton, IonIcon, IonAlert, IonToast, IonHeader, IonToolbar, IonTitle, IonList, IonItem, IonLabel, IonItemSliding, IonItemOptions, IonItemOption, alertController, IonNote,IonBadge } from '@ionic/vue';
+import { IonPage, IonContent, IonFab, IonFabButton, IonIcon, IonAlert, IonToast, IonHeader, IonToolbar, IonTitle, IonList, IonItem, IonLabel, IonItemSliding, IonItemOptions, IonItemOption, alertController, IonNote, IonBadge } from '@ionic/vue';
 import { add, create, trash } from 'ionicons/icons';
 import { ref, onMounted } from 'vue';
-import { FoodConstructor } from '@/composables/foodConstructor';
+import { FoodConstructor, IFood } from '@/composables/foodConstructor';
 const { foodList, addFood, loadFoods, deleteFood } = FoodConstructor();
 export const message = ref<string | null>(null);
 </script>
@@ -61,17 +63,17 @@ const alertButtons = [
   {
     text: '添加',
     handler: async (data: any) => {
-      if (!(data.foodName && data.foodWeight)) {
+      if (!(data.foodName && data.foodWeightMorning && data.foodWeightNoon && data.foodWeightEvening)) {
         console.log('食物未输入');
         message.value = '请输入食物名称和权重后再提交'; //显示条形通知，提示格式不正确
         return false;
-      } else if (data.foodWeight < 0) {
+      } else if (data.foodWeightMorning < 0 || data.foodWeightNoon < 0 || data.foodWeightEvening < 0) {
         message.value = '权重不能是负数！';
         return false;
       }
       else {
-        console.log(`准备添加食物${data.foodName}，${data.foodWeight}`);
-        if (await addFood(data.foodName, data.foodWeight)) {
+        console.log(`准备添加食物${data.foodName}`);
+        if (await addFood(data.foodName, { morning: data.foodWeightMorning, noon: data.foodWeightNoon, evening: data.foodWeightEvening })) {
           message.value = `${data.foodName}添加成功！`; //显示条形通知，表示添加成功
           return true;
         } else {
@@ -87,13 +89,25 @@ const alertInputs = [
     placeholder: '食物名称',
   },
   {
-    name: 'foodWeight',
+    name: 'foodWeightMorning',
     type: 'number',
-    placeholder: '权重',
+    placeholder: '权重：早',
+    min: 0,
+  },
+  {
+    name: 'foodWeightNoon',
+    type: 'number',
+    placeholder: '权重：午',
+    min: 0,
+  },
+  {
+    name: 'foodWeightEvening',
+    type: 'number',
+    placeholder: '权重：晚',
     min: 0,
   },
 ];
-const editFood = async (food: any) => {
+const editFood = async (food: IFood) => {
   console.log("正在编辑食物");
   const alert = await alertController.create({
     header: '编辑食物',
@@ -104,12 +118,26 @@ const editFood = async (food: any) => {
         value: food.name,
       },
       {
-        name: 'foodWeight',
+        name: 'foodWeightMorning',
         type: 'number',
         placeholder: '权重',
-        value: food.weight,
+        value: food.weight.morning,
         min: 0,
       },
+      {
+        name: 'foodWeightNoon',
+        type: 'number',
+        placeholder: '权重',
+        value: food.weight.noon,
+        min: 0,
+      },
+      {
+        name: 'foodWeightEvening',
+        type: 'number',
+        placeholder: '权重',
+        value: food.weight.evening,
+        min: 0,
+      }
     ],
     buttons: [
       {
@@ -119,9 +147,11 @@ const editFood = async (food: any) => {
       {
         text: '保存',
         handler: async (data) => {
-          if (data.foodName && data.foodWeight) {
+          if (data.foodName && data.foodWeightMorning && data.foodWeightNoon && data.foodWeightEvening) {
             food.name = data.foodName;
-            food.weight = Number(data.foodWeight);
+            food.weight.morning = Number(data.foodWeightMorning);
+            food.weight.noon = Number(data.foodWeightNoon);
+            food.weight.evening = Number(data.foodWeightEvening);
           }
         },
       },

@@ -18,18 +18,19 @@
 function updateTime() {
   timeNow.value = new Date();
 }
+
 </script>
 
 <script setup lang="ts">
 import { IonPage, IonContent, IonNote, IonButton, IonHeader, IonToolbar, IonTitle, IonLabel } from '@ionic/vue';
 import { timeNow, selectFood, timePeriod } from '@/composables/foodSelector';
 import { onMounted, ref } from 'vue';
-import { IFood } from '@/composables/foodConstructor';
+import { ValidFood } from '@/composables/foodSelector';
 onMounted(() => {
   setInterval(updateTime, 60000);
 })
 
-const selectedFood = ref<IFood>();
+const selectedFood = ref<ValidFood | null>();
 </script>
 
 <style scoped>
