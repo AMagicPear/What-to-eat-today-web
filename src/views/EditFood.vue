@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { IonPage, IonContent, IonFab, IonFabButton, IonIcon, IonAlert, IonToast, IonHeader, IonToolbar, IonTitle, IonList, IonItem, IonLabel, IonItemSliding, IonItemOptions, IonItemOption, alertController, IonNote, IonBadge } from '@ionic/vue';
+import { IonPage, IonContent, IonFab, IonFabButton, IonIcon, IonAlert, IonToast, IonHeader, IonToolbar, IonTitle, IonList, IonItem, IonLabel, IonItemSliding, IonItemOptions, IonItemOption, alertController, IonNote, IonBadge, AlertInput } from '@ionic/vue';
 import { add, create, trash } from 'ionicons/icons';
 import { ref, onMounted } from 'vue';
 import { FoodConstructor, IFood } from '@/composables/foodConstructor';
@@ -62,7 +62,7 @@ const alertButtons = [
   },
   {
     text: '添加',
-    handler: async (data: any) => {
+    handler: async (data: FoodInputs) => {
       if (!(data.foodName && data.foodWeightMorning && data.foodWeightNoon && data.foodWeightEvening)) {
         console.log('食物未输入');
         message.value = '请输入食物名称和权重后再提交'; //显示条形通知，提示格式不正确
@@ -83,7 +83,14 @@ const alertButtons = [
     }
   }
 ];
-const alertInputs = [
+interface FoodInputs {
+  foodName: string;
+  foodWeightMorning: number;
+  foodWeightNoon: number;
+  foodWeightEvening: number;
+}
+
+const alertInputs: AlertInput[] = [
   {
     name: 'foodName',
     placeholder: '食物名称',
@@ -146,12 +153,12 @@ const editFood = async (food: IFood) => {
       },
       {
         text: '保存',
-        handler: async (data) => {
+        handler: async (data: FoodInputs) => {
           if (data.foodName && data.foodWeightMorning && data.foodWeightNoon && data.foodWeightEvening) {
             food.name = data.foodName;
-            food.weight.morning = Number(data.foodWeightMorning);
-            food.weight.noon = Number(data.foodWeightNoon);
-            food.weight.evening = Number(data.foodWeightEvening);
+            food.weight.morning = data.foodWeightMorning;
+            food.weight.noon = data.foodWeightNoon;
+            food.weight.evening = data.foodWeightEvening;
           }
         },
       },

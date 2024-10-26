@@ -4,6 +4,7 @@ import { FoodConstructor } from './foodConstructor';
 const { foodList, loadFoods, saveFoods } = FoodConstructor();
 
 import { Log } from './log'
+import { toastController } from '@ionic/vue';
 const { saveLog } = Log();
 
 export interface ValidFood {
@@ -44,8 +45,12 @@ export const selectFood = async () => {
   console.log("正在选择食物，当前可选食物列表：");
   console.log(validFoods);
   const totalWeight = validFoods.reduce((sum, food) => sum + Number(food.weight), 0);
+  console.log(`当前总重：${totalWeight}`);
   if (totalWeight === 0) {
-    alert("当前时段所有可选食物的概率都为零。无法选择！");
+    (await toastController.create({
+      message: "当前时段所有可选食物的概率都为零，无法选择！",
+      duration: 2000,
+    })).present();
     return null;
   }
   const selectFoodByWeight = (foods: ValidFood[], totalWeight: number) => {

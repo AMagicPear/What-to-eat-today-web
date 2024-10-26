@@ -26,7 +26,7 @@ export interface IFood {
     weight: Weight;
     counts: number;
 }
-const foodList = ref<Food[]>([]);
+const foodList = ref<IFood[]>([]);
 
 export const FoodConstructor = () => {
     const loadFoods = async () => {
@@ -48,7 +48,7 @@ export const FoodConstructor = () => {
             message.value = "已经存在该食物，请勿重复添加";
             return false;
         }
-        console.log(`正在添加食物${name}，${weight}`);
+        console.log(`正在添加食物${name}`);
         foodList.value.push(new Food(name, weight));
         await saveFoods();
         return true;
