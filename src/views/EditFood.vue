@@ -12,22 +12,31 @@
           <ion-badge slot="end">所占权重</ion-badge>
           <ion-badge slot="end" color="secondary">已选次数</ion-badge>
         </ion-item>
-        <ion-item-sliding v-for="food in foodList" :key="food.name">
-          <ion-item>
-            <ion-label>{{ food.name }}</ion-label>
-            <ion-badge slot="end">早 {{ food.weight.morning }}</ion-badge>
-            <ion-badge slot="end">午 {{ food.weight.noon }}</ion-badge>
-            <ion-badge slot="end">晚 {{ food.weight.evening }}</ion-badge>
-            <ion-badge slot="end" color="secondary">{{ food.counts }}</ion-badge>
-          </ion-item>
-          <ion-item-options side="end">
-            <ion-item-option @click="editFood(food)"><ion-icon slot="end" :icon="create"></ion-icon>编辑</ion-item-option>
-            <ion-item-option color="danger" expandable @click="deleteFood(food.name)"><ion-icon slot="end"
-                :icon="trash"></ion-icon>删除</ion-item-option>
-          </ion-item-options>
-        </ion-item-sliding>
+        <ion-reorder-group :disabled="isOrderDisabled" @ionItemReorder="handleReorder($event)">
+          <ion-item-sliding v-for="food in foodList" :key="food.name">
+            <ion-item>
+              <ion-label>{{ food.name }}</ion-label>
+              <ion-checkbox slot="end" :disabled="isCheckBoxDisabled"></ion-checkbox>
+              <ion-reorder slot="end"></ion-reorder>
+              <ion-badge slot="end">早 {{ food.weight.morning }}</ion-badge>
+              <ion-badge slot="end">午 {{ food.weight.noon }}</ion-badge>
+              <ion-badge slot="end">晚 {{ food.weight.evening }}</ion-badge>
+              <ion-badge slot="end" color="secondary">{{ food.counts }}</ion-badge>
+            </ion-item>
+            <ion-item-options side="end">
+              <ion-item-option @click="editFood(food)"><ion-icon slot="end"
+                  :icon="create"></ion-icon>编辑</ion-item-option>
+              <ion-item-option color="danger" expandable @click="deleteFood(food.name)"><ion-icon slot="end"
+                  :icon="trash"></ion-icon>删除</ion-item-option>
+            </ion-item-options>
+          </ion-item-sliding>
+        </ion-reorder-group>
       </ion-list>
     </ion-content>
+    <ion-item>
+      <ion-toggle class="ion-padding" :enable-on-off-labels="true" :checked="true" @ion-change="toggleOrder">开启排序</ion-toggle>
+      <ion-toggle class="ion-padding" :enable-on-off-labels="true" :checked="false" @ion-change="toggleCheckBox">开启选择</ion-toggle>
+    </ion-item>
     <ion-note class="ion-padding" style="text-align: center;"><span v-html="bottomTip"></span></ion-note>
     <ion-fab slot="fixed" vertical="bottom" horizontal="end" id="add-button">
       <ion-fab-button>
@@ -40,17 +49,20 @@
 </template>
 
 <script lang="ts">
-import { IonPage, IonContent, IonFab, IonFabButton, IonIcon, IonAlert, IonToast, IonHeader, IonToolbar, IonTitle, IonList, IonItem, IonLabel, IonItemSliding, IonItemOptions, IonItemOption, alertController, IonNote, IonBadge, AlertInput } from '@ionic/vue';
+import { IonPage, IonContent, IonFab, IonFabButton, IonIcon, IonAlert, IonToast, IonHeader, IonToolbar, IonTitle, IonList, IonItem, IonLabel, IonItemSliding, IonItemOptions, IonItemOption, alertController, IonNote, IonBadge, AlertInput, IonReorder, IonReorderGroup, IonToggle,IonCheckbox } from '@ionic/vue';
 import { add, create, trash } from 'ionicons/icons';
 import { ref, onMounted } from 'vue';
 import { FoodConstructor, IFood } from '@/composables/foodConstructor';
-const { foodList, addFood, loadFoods, deleteFood } = FoodConstructor();
+const { foodList, addFood, loadFoods, deleteFood, saveFoods } = FoodConstructor();
 export const message = ref<string | null>(null);
 </script>
 
 <script setup lang="ts">
 //页面逻辑
-const bottomTip = `TIP：<br/>点击右侧+号添加食物 滑动来编辑或删除<br/>所占权重越大，食物被选中的几率更高`;
+const bottomTip = `TIP：点击右侧+号添加食物 滑动来编辑或删除<br/>所占权重越大，食物被选中的几率更高`;
+const isOrderDisabled = ref(false);
+const isCheckBoxDisabled = ref(true);
+
 const alertButtons = [
   {
     text: '取消',
@@ -172,6 +184,18 @@ onMounted(() => {
     console.log(foodList.value);
   })
 })
+const handleReorder = (event: CustomEvent) => {
+  console.log(`${foodList.value[event.detail.from].name}移到了位置${event.detail.to}`)
+  foodList.value = event.detail.complete(foodList.value);
+  saveFoods();
+};
+
+const toggleOrder = (event: CustomEvent) => {
+  isOrderDisabled.value = !event.detail.checked;
+};
+const toggleCheckBox = (event: CustomEvent) => {
+  isCheckBoxDisabled.value = !event.detail.checked;
+}
 </script>
 
 <style scoped>
