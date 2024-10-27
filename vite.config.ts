@@ -8,6 +8,7 @@ import VueSetupExtend from 'vite-plugin-vue-setup-extend'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/What-to-eat-today-web',
   plugins: [
     vue(),
     legacy(),
