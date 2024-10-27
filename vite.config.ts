@@ -6,9 +6,11 @@ import path from 'path'
 import { defineConfig } from 'vite'
 import VueSetupExtend from 'vite-plugin-vue-setup-extend'
 
+const base = process.env.VITE_BASE_PATH || './';
+
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/What-to-eat-today-web',
+  base: base,
   plugins: [
     vue(),
     legacy(),

@@ -1,7 +1,7 @@
 {
   "name": "what-to-eat-today",
   "private": true,
-  "version": "0.0.1",
+  "version": "2.0.0",
   "type": "module",
   "author": {
     "name": "AMagicPear",
@@ -14,13 +14,15 @@
     "preview": "vite preview",
     "test:e2e": "cypress run",
     "test:unit": "vitest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "build-tauri": "tauri build"
   },
   "dependencies": {
     "@capacitor/android": "6.1.2",
     "@capacitor/app": "6.0.1",
     "@capacitor/core": "6.1.2",
     "@capacitor/haptics": "6.0.1",
+    "@capacitor/ios": "6.1.2",
     "@capacitor/keyboard": "6.0.2",
     "@capacitor/status-bar": "^6.0.1",
     "@ionic/storage": "^4.0.0",

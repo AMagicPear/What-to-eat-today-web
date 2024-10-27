@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "今天吃什么",
-  "version": "3.0.1",
-  "identifier": "com.perry.dietmanager",
+  "version": "3.0.0",
+  "identifier": "com.amagicpear.dietmanager",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:8100",
@@ -14,7 +14,7 @@
       {
         "title": "今天吃什么",
         "width": 600,
-        "height": 1080,
+        "height": 800,
         "resizable": true,
         "fullscreen": false
       }
