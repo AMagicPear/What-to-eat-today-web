@@ -13,10 +13,11 @@
           <ion-badge slot="end" color="secondary">已选次数</ion-badge>
         </ion-item>
         <ion-reorder-group :disabled="isOrderDisabled" @ionItemReorder="handleReorder($event)">
-          <ion-item-sliding v-for="food in foodList" :key="food.name">
+          <ion-item-sliding v-for="(food, index) in foodList" :key="food.name">
             <ion-item>
               <ion-label>{{ food.name }}</ion-label>
-              <ion-checkbox slot="end" :disabled="isCheckBoxDisabled"></ion-checkbox>
+              <ion-checkbox slot="end" :disabled="isCheckBoxDisabled"
+                @ion-change="toggleCheck(index, food.name)"></ion-checkbox>
               <ion-reorder slot="end"></ion-reorder>
               <ion-badge slot="end">早 {{ food.weight.morning }}</ion-badge>
               <ion-badge slot="end">午 {{ food.weight.noon }}</ion-badge>
@@ -34,8 +35,10 @@
       </ion-list>
     </ion-content>
     <ion-item>
-      <ion-toggle class="ion-padding" :enable-on-off-labels="true" :checked="true" @ion-change="toggleOrder">开启排序</ion-toggle>
-      <ion-toggle class="ion-padding" :enable-on-off-labels="true" :checked="false" @ion-change="toggleCheckBox">开启选择</ion-toggle>
+      <ion-toggle class="ion-padding" :enable-on-off-labels="true" :checked="true"
+        @ion-change="toggleOrder">开启排序</ion-toggle>
+      <ion-toggle class="ion-padding" :enable-on-off-labels="true" :checked="false"
+        @ion-change="toggleCheckBox">开启选择</ion-toggle>
     </ion-item>
     <ion-note class="ion-padding" style="text-align: center;"><span v-html="bottomTip"></span></ion-note>
     <ion-fab slot="fixed" vertical="bottom" horizontal="end" id="add-button">
@@ -49,20 +52,23 @@
 </template>
 
 <script lang="ts">
-import { IonPage, IonContent, IonFab, IonFabButton, IonIcon, IonAlert, IonToast, IonHeader, IonToolbar, IonTitle, IonList, IonItem, IonLabel, IonItemSliding, IonItemOptions, IonItemOption, alertController, IonNote, IonBadge, AlertInput, IonReorder, IonReorderGroup, IonToggle,IonCheckbox } from '@ionic/vue';
+import { IonPage, IonContent, IonFab, IonFabButton, IonIcon, IonAlert, IonToast, IonHeader, IonToolbar, IonTitle, IonList, IonItem, IonLabel, IonItemSliding, IonItemOptions, IonItemOption, alertController, IonNote, IonBadge, AlertInput, IonReorder, IonReorderGroup, IonToggle, IonCheckbox } from '@ionic/vue';
 import { add, create, trash } from 'ionicons/icons';
 import { ref, onMounted } from 'vue';
 import { FoodConstructor, IFood } from '@/composables/foodConstructor';
 const { foodList, addFood, loadFoods, deleteFood, saveFoods } = FoodConstructor();
 export const message = ref<string | null>(null);
+export const checkedList = ref<boolean[]>([]);
+export const isCheckBoxDisabled = ref(true);
 </script>
 
 <script setup lang="ts">
-//页面逻辑
+// 页面底部提示信息
 const bottomTip = `TIP：点击右侧+号添加食物 滑动来编辑或删除<br/>所占权重越大，食物被选中的几率更高`;
+// 是否禁用排序
 const isOrderDisabled = ref(false);
-const isCheckBoxDisabled = ref(true);
 
+// 添加食物的弹窗按钮配置
 const alertButtons = [
   {
     text: '取消',
@@ -77,7 +83,7 @@ const alertButtons = [
     handler: async (data: FoodInputs) => {
       if (!(data.foodName && data.foodWeightMorning && data.foodWeightNoon && data.foodWeightEvening)) {
         console.log('食物未输入');
-        message.value = '请输入食物名称和权重后再提交'; //显示条形通知，提示格式不正确
+        message.value = '请输入食物名称和权重后再提交'; // 显示条形通知，提示格式不正确
         return false;
       } else if (data.foodWeightMorning < 0 || data.foodWeightNoon < 0 || data.foodWeightEvening < 0) {
         message.value = '权重不能是负数！';
@@ -86,7 +92,7 @@ const alertButtons = [
       else {
         console.log(`准备添加食物${data.foodName}`);
         if (await addFood(data.foodName, { morning: data.foodWeightMorning, noon: data.foodWeightNoon, evening: data.foodWeightEvening })) {
-          message.value = `${data.foodName}添加成功！`; //显示条形通知，表示添加成功
+          message.value = `${data.foodName}添加成功！`; // 显示条形通知，表示添加成功
           return true;
         } else {
           return false;
@@ -95,6 +101,8 @@ const alertButtons = [
     }
   }
 ];
+
+// 食物输入接口
 interface FoodInputs {
   foodName: string;
   foodWeightMorning: number;
@@ -102,6 +110,7 @@ interface FoodInputs {
   foodWeightEvening: number;
 }
 
+// 添加食物的弹窗输入配置
 const alertInputs: AlertInput[] = [
   {
     name: 'foodName',
@@ -126,6 +135,8 @@ const alertInputs: AlertInput[] = [
     min: 0,
   },
 ];
+
+// 编辑食物函数
 const editFood = async (food: IFood) => {
   console.log("正在编辑食物");
   const alert = await alertController.create({
@@ -178,24 +189,39 @@ const editFood = async (food: IFood) => {
   });
   await alert.present();
 }
+
+// 页面加载时加载食物列表
 onMounted(() => {
   loadFoods().then(() => {
     console.log("加载食物列表：");
     console.log(foodList.value);
+    checkedList.value = new Array(foodList.value.length).fill(false);
   })
 })
+
+// 处理排序事件
 const handleReorder = (event: CustomEvent) => {
   console.log(`${foodList.value[event.detail.from].name}移到了位置${event.detail.to}`)
+  const movedItem = checkedList.value.splice(event.detail.from, 1)[0];
+  checkedList.value.splice(event.detail.to, 0, movedItem);
   foodList.value = event.detail.complete(foodList.value);
   saveFoods();
 };
 
+// 切换排序功能
 const toggleOrder = (event: CustomEvent) => {
   isOrderDisabled.value = !event.detail.checked;
 };
+
+// 切换选择功能
 const toggleCheckBox = (event: CustomEvent) => {
   isCheckBoxDisabled.value = !event.detail.checked;
 }
+
+const toggleCheck = (index: number, foodName: string) => {
+  checkedList.value[index] = !checkedList.value[index];
+  console.log(`${foodName} 已${checkedList.value[index] ? '选中' : '取消勾选'}.`);
+};
 </script>
 
 <style scoped>

@@ -14,7 +14,9 @@ export interface ValidFood {
 
 const getValidFoods = async (): Promise<ValidFood[]> => {
   await loadFoods();
-  return foodList.value.map(food => {
+  const { isCheckBoxDisabled, checkedList } = await import('@/views/EditFood.vue');
+  const validFoods = isCheckBoxDisabled.value ? foodList.value : foodList.value.filter((_, index) => checkedList.value[index]);
+  return validFoods.map(food => {
     let weight = 0;
     if (timePeriod.value === '早')
       weight = food.weight.morning;
@@ -47,7 +49,7 @@ export const selectFood = async () => {
   const totalWeight = validFoods.reduce((sum, food) => sum + Number(food.weight), 0);
   console.log(`当前总重：${totalWeight}`);
   if (totalWeight === 0) {
-    (await toastController.create({
+    await (await toastController.create({
       message: "当前时段所有可选食物的概率都为零，无法选择！",
       duration: 2000,
     })).present();
@@ -69,11 +71,11 @@ export const selectFood = async () => {
     if (foodInList) {
       console.log("选择了：");
       foodInList.counts += 1;
-      saveFoods();
+      await saveFoods();
       console.log(foodInList);
       console.log("目前的食物列表：")
       console.log(foodList.value);
-      saveLog(foodInList.name);
+      await saveLog(foodInList.name);
     }
   }
   return selectedFood;
