@@ -2,8 +2,9 @@ import storage from "@/composables/storage";
 import { timeNow } from "./foodSelector";
 import { ref } from "vue";
 
+export const logs = ref<{ time?: Date, name?: string }[]>([])
+
 export const Log = () => {
-    const logs = ref<{ time?: Date, name?: string }[]>([])
     const saveLog = async (foodName: string) => {
         const selectedFoodLog = {
             time: timeNow.value,
