@@ -1,6 +1,6 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "今天吃什么",
+  "productName": "What-to-eat-today",
   "version": "3.0.0",
   "identifier": "com.amagicpear.dietmanager",
   "build": {

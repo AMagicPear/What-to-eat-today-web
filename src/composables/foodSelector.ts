@@ -15,7 +15,15 @@ export interface ValidFood {
 const getValidFoods = async (): Promise<ValidFood[]> => {
   await loadFoods();
   const { isCheckBoxDisabled, checkedList } = await import('@/views/EditFood.vue');
-  const validFoods = isCheckBoxDisabled.value ? foodList.value : foodList.value.filter((_, index) => checkedList.value[index]);
+  let validFoods = isCheckBoxDisabled.value ? foodList.value : foodList.value.filter((_, index) => checkedList.value[index]);
+  console.log(`第一次筛选后的食物：`)
+  console.log(validFoods)
+  const { logs } = await import('@/composables/log');
+  console.log("最后两项：", logs.value[logs.value.length - 1].name, logs.value[logs.value.length - 2].name);
+  if (logs.value.length >= 2 && validFoods.length > 2 && logs.value[logs.value.length - 1].name === logs.value[logs.value.length - 2].name)
+    validFoods = validFoods.filter(food => food.name !== logs.value[logs.value.length - 1].name);
+  console.log(`第二次筛选后的食物：`)
+  console.log(validFoods);
   return validFoods.map(food => {
     let weight = 0;
     if (timePeriod.value === '早')
