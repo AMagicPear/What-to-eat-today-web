@@ -42,9 +42,9 @@ npm run build-tauri
 ### 构建GitHub Pages时
 由于GitHub Pages需要路由到仓库名，所以我设置了一个环境变量，在为GitHub Pages构建时需要设置这个`VITE_BASE_PATH`环境变量到`/What-to-eat-today-web`以获得正确的路由。
 ```bash
-export VITE_BASE_PATH=/What-to-eat-today-web && npm run build
+export VITE_BASE_PATH=/What-to-eat-today-web/ && npm run build
 ```
 在Powershell中，应使用
 ```powershell
-$env:VITE_BASE_PATH="/What-to-eat-today-web"; npm run build
+$env:VITE_BASE_PATH="/What-to-eat-today-web/"; npm run build
 ```
