@@ -3,7 +3,7 @@ export const timeNow = ref(new Date());
 import { FoodConstructor } from './foodConstructor';
 const { foodList, loadFoods, saveFoods } = FoodConstructor();
 
-import { Log } from './log'
+import { Log, logs } from './log'
 import { toastController } from '@ionic/vue';
 const { saveLog } = Log();
 
@@ -20,12 +20,14 @@ const getValidFoods = async (): Promise<ValidFood[]> => {
   console.log(`第一次筛选后的食物：`)
   console.log(validFoods)
   // 第二次筛选：根据最近两次选择的食物来筛选
-  const { logs } = await import('@/composables/log');
-  console.log("最后两项：", logs.value[logs.value.length - 1].name, logs.value[logs.value.length - 2].name);
-  if (logs.value.length >= 2 && validFoods.length > 2 && logs.value[logs.value.length - 1].name === logs.value[logs.value.length - 2].name)
-    validFoods = validFoods.filter(food => food.name !== logs.value[logs.value.length - 1].name);
-  console.log(`第二次筛选后的食物：`)
-  console.log(validFoods);
+  if (logs.value.length >= 2) {
+    console.log("最后两项：", logs.value[logs.value.length - 1].name, logs.value[logs.value.length - 2].name);
+    if (validFoods.length > 2 && logs.value[logs.value.length - 1].name === logs.value[logs.value.length - 2].name) {
+      validFoods = validFoods.filter(food => food.name !== logs.value[logs.value.length - 1].name);
+      console.log(`第二次筛选后的食物：`)
+      console.log(validFoods);
+    }
+  }
   // 第三次筛选：根据最近30次选择的食物来筛选
   if (isCheckBoxDisabled.value && logs.value.length >= 30) {
     const recentLogs = logs.value.slice(-30);
