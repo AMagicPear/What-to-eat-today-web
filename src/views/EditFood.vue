@@ -19,9 +19,7 @@
               <ion-checkbox slot="end" :disabled="isCheckBoxDisabled"
                 @ion-change="toggleCheck(index, food.name)"></ion-checkbox>
               <ion-reorder slot="end"></ion-reorder>
-              <ion-badge slot="end">早 {{ food.weight.morning }}</ion-badge>
-              <ion-badge slot="end">午 {{ food.weight.noon }}</ion-badge>
-              <ion-badge slot="end">晚 {{ food.weight.evening }}</ion-badge>
+              <ion-badge slot="end" v-for="(value, key) in food.weight" :key>{{mapTime(key)}} {{ value }}</ion-badge>
               <ion-badge slot="end" color="secondary">{{ food.counts }}</ion-badge>
             </ion-item>
             <ion-item-options side="end">
@@ -190,6 +188,21 @@ const editFood = async (food: IFood) => {
   await alert.present();
 }
 
+// 把morning, noon, evening分别映射到早中晚
+const mapTime = (key: string) => {
+  switch (key) {
+    case 'morning':
+      return '早';
+    case 'noon':
+      return '午';
+    case 'evening':
+      return '晚';
+    default:
+      return '';
+  }
+}
+
+
 // 页面加载时加载食物列表
 onMounted(() => {
   loadFoods().then(() => {
@@ -218,6 +231,7 @@ const toggleCheckBox = (event: CustomEvent) => {
   isCheckBoxDisabled.value = !event.detail.checked;
 }
 
+// 切换选择状态
 const toggleCheck = (index: number, foodName: string) => {
   checkedList.value[index] = !checkedList.value[index];
   console.log(`${foodName} 已${checkedList.value[index] ? '选中' : '取消勾选'}.`);
