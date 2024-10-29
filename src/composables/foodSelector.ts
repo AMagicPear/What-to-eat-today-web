@@ -27,7 +27,7 @@ const getValidFoods = async (): Promise<ValidFood[]> => {
   console.log(`第二次筛选后的食物：`)
   console.log(validFoods);
   // 第三次筛选：根据最近30次选择的食物来筛选
-  if (isCheckBoxDisabled.value) {
+  if (isCheckBoxDisabled.value && logs.value.length >= 30) {
     const recentLogs = logs.value.slice(-30);
     const recentLogNames = recentLogs.map(log => log.name);
     const neverAppearedFoods = validFoods.filter(food => !recentLogNames.includes(food.name));
