@@ -1,9 +1,11 @@
 # 今天吃什么
 这是一个使用Vue3+Ionic构建的，专门为我妹妹写的用来帮助决定今天吃什么的Web应用。
 现在包括的功能如下：
-- [x]  可保存多个食物，并分别设置其早上、中午、晚上时间段的权重，点击“今天吃什么”按钮，系统将根据当前时间段各个食物的权重随机选择一项。
+- [x] 可保存多个食物，并分别设置其早上、中午、晚上时间段的权重，点击“今天吃什么”按钮，系统将根据当前时间段各个食物的权重随机选择一项。
 - [x] 每种食物在被连续选择两次后的下一次不会再次被选择。
-- [ ] 会优先选择近30次选择内从未被选中的食物。
+- [x] 优先选择近30次选择内从未被选中的食物。
+- [x] 可以对列表中的食物排序。
+- [x] 用户可以主动选择特定的食物来随机选择。
 
 项目预览见：
 [今天吃什么](https://amagicpear.github.io/What-to-eat-today-web/)
@@ -40,7 +42,7 @@ ionic cap build
 npm run build-tauri
 ```
 ### 构建GitHub Pages时
-由于GitHub Pages需要路由到仓库名，所以我设置了一个环境变量，在为GitHub Pages构建时需要设置这个`VITE_BASE_PATH`环境变量到`/What-to-eat-today-web`以获得正确的路由。
+由于GitHub Pages需要路由到仓库名，所以我设置了一个环境变量，在为GitHub Pages构建时需要设置这个`VITE_BASE_PATH`环境变量到`/What-to-eat-today-web/`以获得正确的路由。
 ```bash
 export VITE_BASE_PATH=/What-to-eat-today-web/ && npm run build
 ```

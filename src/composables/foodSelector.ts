@@ -14,16 +14,29 @@ export interface ValidFood {
 
 const getValidFoods = async (): Promise<ValidFood[]> => {
   await loadFoods();
+  // 第一次筛选：根据是否被选中来筛选
   const { isCheckBoxDisabled, checkedList } = await import('@/views/EditFood.vue');
   let validFoods = isCheckBoxDisabled.value ? foodList.value : foodList.value.filter((_, index) => checkedList.value[index]);
   console.log(`第一次筛选后的食物：`)
   console.log(validFoods)
+  // 第二次筛选：根据最近两次选择的食物来筛选
   const { logs } = await import('@/composables/log');
   console.log("最后两项：", logs.value[logs.value.length - 1].name, logs.value[logs.value.length - 2].name);
   if (logs.value.length >= 2 && validFoods.length > 2 && logs.value[logs.value.length - 1].name === logs.value[logs.value.length - 2].name)
     validFoods = validFoods.filter(food => food.name !== logs.value[logs.value.length - 1].name);
   console.log(`第二次筛选后的食物：`)
   console.log(validFoods);
+  // 第三次筛选：根据最近30次选择的食物来筛选
+  if (isCheckBoxDisabled.value) {
+    const recentLogs = logs.value.slice(-30);
+    const recentLogNames = recentLogs.map(log => log.name);
+    const neverAppearedFoods = validFoods.filter(food => !recentLogNames.includes(food.name));
+    if (neverAppearedFoods.length > 0) {
+      validFoods = neverAppearedFoods;
+    }
+    console.log(`第三次筛选后的食物：`)
+    console.log(validFoods);
+  }
   return validFoods.map(food => {
     let weight = 0;
     if (timePeriod.value === '早')
