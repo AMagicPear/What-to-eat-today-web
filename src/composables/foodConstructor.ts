@@ -18,7 +18,12 @@ class Food {
         this.counts = counts;
     }
     static fromStorage(json: IFood) {
-        return new Food(json.name, json.weight, json.counts);
+        const weight: Weight = {
+            morning: Number(json.weight.morning),
+            noon: Number(json.weight.noon),
+            evening: Number(json.weight.evening)
+        };
+        return new Food(json.name, weight, json.counts);
     }
 }
 export interface IFood {

@@ -1,7 +1,7 @@
 import { ref, computed, ComputedRef } from 'vue';
 export const timeNow = ref(new Date());
 import { FoodConstructor } from './foodConstructor';
-const { foodList, loadFoods, saveFoods } = FoodConstructor();
+const { foodList, saveFoods } = FoodConstructor();
 
 import { Log, logs } from './log'
 import { toastController } from '@ionic/vue';
@@ -12,8 +12,7 @@ export interface ValidFood {
   weight: number;
 }
 
-const getValidFoods = async (): Promise<ValidFood[]> => {
-  await loadFoods();
+export const validFoodsComputed = computed(async (): Promise<ValidFood[]> => {
   // 第一次筛选：根据是否被选中来筛选
   const { isCheckBoxDisabled, checkedList } = await import('@/views/EditFood.vue');
   let validFoods = isCheckBoxDisabled.value ? foodList.value : foodList.value.filter((_, index) => checkedList.value[index]);
@@ -50,7 +49,7 @@ const getValidFoods = async (): Promise<ValidFood[]> => {
     else weight = food.weight.evening;
     return { name: food.name, weight };
   })
-}
+})
 
 export const timePeriod: ComputedRef<string> = computed(() => {
   const hour = timeNow.value.getHours();
@@ -66,7 +65,7 @@ export const timePeriod: ComputedRef<string> = computed(() => {
 })
 
 export const selectFood = async () => {
-  const validFoods = await getValidFoods();
+  const validFoods = await validFoodsComputed.value;
   console.log("正在选择食物，当前可选食物列表：");
   console.log(validFoods);
   const totalWeight = validFoods.reduce((sum, food) => sum + Number(food.weight), 0);

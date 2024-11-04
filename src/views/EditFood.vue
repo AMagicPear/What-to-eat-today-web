@@ -89,7 +89,7 @@ const alertButtons = [
       }
       else {
         console.log(`准备添加食物${data.foodName}`);
-        if (await addFood(data.foodName, { morning: data.foodWeightMorning, noon: data.foodWeightNoon, evening: data.foodWeightEvening })) {
+        if (await addFood(data.foodName, { morning: Number(data.foodWeightMorning), noon: Number(data.foodWeightNoon), evening: Number(data.foodWeightEvening) })) {
           message.value = `${data.foodName}添加成功！`; // 显示条形通知，表示添加成功
           return true;
         } else {
@@ -180,6 +180,7 @@ const editFood = async (food: IFood) => {
             food.weight.morning = data.foodWeightMorning;
             food.weight.noon = data.foodWeightNoon;
             food.weight.evening = data.foodWeightEvening;
+            await saveFoods();
           }
         },
       },

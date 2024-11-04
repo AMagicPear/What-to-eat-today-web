@@ -10,6 +10,10 @@ export const Log = () => {
             time: timeNow.value,
             name: foodName
         };
+        // 检查 logs 的长度，如果超过 50，则删除最早的记录
+        if (logs.value.length >= 50) {
+            logs.value.shift();
+        }
         logs.value.push(selectedFoodLog);
         await storage.set('log', JSON.parse(JSON.stringify(logs.value)));
         console.log("成功保存记录");

@@ -7,10 +7,11 @@
     </ion-header>
     <ion-content class="ion-padding">
       <ion-note>{{ timeNow }}</ion-note>
-      <ion-button @click="selectFood().then(food => selectedFood = food)">选择食物</ion-button><br />
       <ion-label>今天的{{ timePeriod }}饭要吃的食物是：<br />
       </ion-label>
-      <ion-label style="text-align: center;">{{ selectedFood?.name }}</ion-label>
+      <!-- <ion-label v-if="selectedFood" style="text-align: center;">{{ selectedFood?.name }}</ion-label> -->
+      <WheelSpinner />
+      <!-- <ion-button @click="selectFood().then(food => selectedFood = food)">选择食物old</ion-button><br /> -->
     </ion-content>
   </ion-page>
 </template>
@@ -18,19 +19,20 @@
 function updateTime() {
   timeNow.value = new Date();
 }
-
 </script>
 
 <script setup lang="ts">
-import { IonPage, IonContent, IonNote, IonButton, IonHeader, IonToolbar, IonTitle, IonLabel } from '@ionic/vue';
-import { timeNow, selectFood, timePeriod } from '@/composables/foodSelector';
-import { onMounted, ref } from 'vue';
-import { ValidFood } from '@/composables/foodSelector';
+import { IonPage, IonContent, IonNote, IonHeader, IonToolbar, IonTitle, IonLabel } from '@ionic/vue';
+import { timeNow, timePeriod } from '@/composables/foodSelector';
+import { onMounted } from 'vue';
+import WheelSpinner from '@/components/WheelSpinner.vue';
+import { FoodConstructor } from '@/composables/foodConstructor';
+const { loadFoods } = FoodConstructor();
+
 onMounted(() => {
   setInterval(updateTime, 60000);
+  loadFoods();
 })
-
-const selectedFood = ref<ValidFood | null>();
 </script>
 
 <style scoped>

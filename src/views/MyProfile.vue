@@ -15,7 +15,7 @@
           <ion-list>
             <ion-item>
               <ion-avatar aria-hidden="true" slot="start">
-                <img alt="AMagicPear" src="@/assets/LostInLight.png" />
+                <img alt="AMagicPear" src="/LostInLight.png" />
               </ion-avatar>
               <ion-label><strong>一只会魔法的梨</strong> 出品</ion-label>
             </ion-item>
