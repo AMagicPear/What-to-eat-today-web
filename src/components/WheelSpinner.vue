@@ -73,7 +73,7 @@ const spinWheel = (degree: number) => {
     currentRotation.value = newRotation; // 更新当前角度
     const finalDegree = newRotation % 360;
     console.log(`Wheel stopped at ${finalDegree} degrees`);
-    alert(selectedFood.value)
+    alert(selectedFood.value.name);
   }, spinningTime * 1000);
 };
 

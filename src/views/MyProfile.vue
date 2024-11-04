@@ -13,12 +13,14 @@
         </ion-card-header>
         <ion-card-content>
           <ion-list>
-            <ion-item>
-              <ion-avatar aria-hidden="true" slot="start">
-                <img alt="AMagicPear" src="/LostInLight.png" />
-              </ion-avatar>
-              <ion-label><strong>一只会魔法的梨</strong> 出品</ion-label>
-            </ion-item>
+            <a href="https://amagicpear.github.io" style="text-decoration: none;">
+              <ion-item>
+                <ion-avatar aria-hidden="true" slot="start">
+                  <img alt="AMagicPear" src="/LostInLight.png" />
+                </ion-avatar>
+                <ion-label><strong>一只会魔法的梨</strong> 出品</ion-label>
+              </ion-item>
+            </a>
           </ion-list>
         </ion-card-content>
       </ion-card>
@@ -27,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonContent, IonHeader, IonToolbar, IonTitle,IonCard,IonCardHeader,IonCardContent,IonCardTitle,IonCardSubtitle,IonList,IonItem,IonLabel,IonAvatar } from '@ionic/vue';
+import { IonPage, IonContent, IonHeader, IonToolbar, IonTitle, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle, IonList, IonItem, IonLabel, IonAvatar } from '@ionic/vue';
 </script>
 
 <style scoped>
