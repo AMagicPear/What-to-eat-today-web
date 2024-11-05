@@ -31,7 +31,7 @@ export interface IFood {
     weight: Weight;
     counts: number;
 }
-const foodList = ref<IFood[]>([]);
+export const foodList = ref<IFood[]>([]);
 
 export const FoodConstructor = () => {
     const loadFoods = async () => {
@@ -66,7 +66,6 @@ export const FoodConstructor = () => {
     }
 
     return {
-        foodList,
         loadFoods,
         addFood,
         saveFoods,

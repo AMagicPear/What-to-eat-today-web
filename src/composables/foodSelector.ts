@@ -1,7 +1,7 @@
 import { ref, computed, ComputedRef } from 'vue';
 export const timeNow = ref(new Date());
-import { FoodConstructor } from './foodConstructor';
-const { foodList, saveFoods } = FoodConstructor();
+import { FoodConstructor, foodList } from './foodConstructor';
+const { saveFoods } = FoodConstructor();
 
 import { Log, logs } from './log'
 import { toastController } from '@ionic/vue';
@@ -18,6 +18,7 @@ export const validFoodsComputed = computed(async (): Promise<ValidFood[]> => {
   let validFoods = isCheckBoxDisabled.value ? foodList.value : foodList.value.filter((_, index) => checkedList.value[index]);
   console.log(`第一次筛选后的食物：`)
   console.log(validFoods)
+  
   // 第二次筛选：根据最近两次选择的食物来筛选
   if (logs.value.length >= 2) {
     console.log("最后两项：", logs.value[logs.value.length - 1].name, logs.value[logs.value.length - 2].name);
@@ -27,6 +28,7 @@ export const validFoodsComputed = computed(async (): Promise<ValidFood[]> => {
       console.log(validFoods);
     }
   }
+  
   // 第三次筛选：根据最近30次选择的食物来筛选
   if (isCheckBoxDisabled.value && logs.value.length >= 30) {
     const recentLogs = logs.value.slice(-30);
@@ -38,18 +40,24 @@ export const validFoodsComputed = computed(async (): Promise<ValidFood[]> => {
     console.log(`第三次筛选后的食物：`)
     console.log(validFoods);
   }
-  return validFoods.map(food => {
-    let weight = 0;
-    if (timePeriod.value === '早')
-      weight = food.weight.morning;
-    else if (timePeriod.value === '早中')
-      weight = (food.weight.morning + food.weight.noon) / 2;
-    else if (timePeriod.value === '午')
-      weight = food.weight.noon;
-    else weight = food.weight.evening;
-    return { name: food.name, weight };
-  })
+
+  return validFoods.map(food => ({
+    name: food.name,
+    weight: getWeightByTimePeriod(food.weight)
+  }));
 })
+
+export function getWeightByTimePeriod(weight: { morning: number, noon: number, evening: number }): number {
+  if (timePeriod.value === '早') {
+    return weight.morning;
+  } else if (timePeriod.value === '早中') {
+    return (weight.morning + weight.noon) / 2;
+  } else if (timePeriod.value === '午') {
+    return weight.noon;
+  } else {
+    return weight.evening;
+  }
+}
 
 export const timePeriod: ComputedRef<string> = computed(() => {
   const hour = timeNow.value.getHours();
