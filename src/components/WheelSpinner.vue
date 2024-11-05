@@ -1,133 +1,156 @@
 <template>
-  <div class="wheel-container">
-    <div class="circle" ref="wheel" :style="wheelStyle"></div>
-    <ion-button @click="chooseFood">选择食物</ion-button>
-  </div>
+  <div ref="chartRef" id="chart" :style="{ width: '100%', height: '400px', marginBottom: '20px' }"></div>
+  <ion-button @click="chooseFood">选择食物</ion-button>
+  <ion-toast :is-open="message" :message="message" :duration="2000" @didDismiss="message = null"></ion-toast>
 </template>
 
 <script lang="ts">
-export const selectedFood = ref<ValidFood | null>(null);
-import { validFoodsComputed, ValidFood, selectFood } from '@/composables/foodSelector';
-import { ref, watch } from 'vue';
+// echarts 相关引入
+import * as echarts from 'echarts/core';
+import { TooltipComponent, LegendComponent } from 'echarts/components';
+import { PieChart } from 'echarts/charts';
+import { LabelLayout } from 'echarts/features';
+import { CanvasRenderer } from 'echarts/renderers';
+echarts.use([
+  TooltipComponent,
+  LegendComponent,
+  PieChart,
+  CanvasRenderer,
+  LabelLayout
+]);
+import { IonButton, IonToast } from '@ionic/vue';
+
+import { ref, onMounted, onUnmounted } from "vue"
+import { getWeightByTimePeriod, selectFood, ValidFood } from '@/composables/foodSelector';
+import { FoodConstructor, foodList } from '@/composables/foodConstructor';
+const { loadFoods } = FoodConstructor();
 </script>
 
 <script setup lang="ts">
-import { IonButton } from '@ionic/vue';
+const chartRef = ref() // echarts 实例
+let myChart: echarts.ECharts;
+const selectedFood = ref<ValidFood | null>(null)
+const message = ref<string | null>(null)
 
-const wheel = ref<HTMLDivElement | null>(null); // 引用转盘元素
-const isSpinning = ref(false); // 防止重复点击
-const wheelStyle = ref({}); // 转盘样式
-const currentRotation = ref(0); // 记录当前转盘的角度
-let totalWeight = 0;
-
-// 绘制转盘
-const drawWheel = async () => {
-  const ctx = document.createElement('canvas').getContext('2d');
-  if (!ctx) return;
-  ctx.canvas.width = 300;
-  ctx.canvas.height = 300;
-  ctx.translate(150, 150);
-
-  let currentAngle = 0;
-  const data: ValidFood[] = await validFoodsComputed.value;
-  data.forEach((item, index) => {
-    const sliceAngle = (item.weight / totalWeight) * 2 * Math.PI;
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.arc(0, 0, 150, currentAngle, currentAngle + sliceAngle);
-    ctx.fillStyle = `hsl(${(index / data.length) * 360}, 100%, 70%)`;
-    ctx.fill();
-
-    // 绘制文本
-    ctx.save();
-    ctx.rotate(currentAngle + sliceAngle / 2);
-    ctx.textAlign = 'right';
-    ctx.fillStyle = '#fff';
-    ctx.font = '16px Arial';
-    ctx.fillText(item.name, 130, 10);
-    ctx.restore();
-    currentAngle += sliceAngle;
-  });
-
-  if (wheel.value) {
-    wheel.value.style.backgroundImage = `url(${ctx.canvas.toDataURL()})`;
-  }
-};
-
-// 旋转转盘并停在任意位置
-const spinWheel = (degree: number) => {
-  if (isSpinning.value) return;
-  isSpinning.value = true;
-  const spinningTime = 2; // 旋转时间
-
-  const finalDegree = degree;
-  const newRotation = currentRotation.value - currentRotation.value % 360 + finalDegree + 1080;
-
-  wheelStyle.value = {
-    transform: `rotate(${newRotation}deg)`,
-    transition: `transform ${spinningTime}s ease-out`
+const initEcharts = () => {
+  const option = {
+    tooltip: {
+      trigger: 'item'
+    },
+    legend: {
+      bottom: '0%',
+      left: 'center'
+    },
+    series: [
+      {
+        name: '食物',
+        type: 'pie', // 环形图
+        radius: ['40%', '70%'], // 控制环形图的大小
+        avoidLabelOverlap: true,
+        itemStyle: {
+          borderRadius: 10,
+          borderColor: '#fff',
+          borderWidth: 2
+        },
+        label: {
+          show: false,
+          position: 'center'
+        },
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: 'rgba(0, 0, 0, 0.8)'
+          }
+        },
+        labelLine: {
+          show: false
+        },
+        data: foodList.value.map((food) => {
+          return {
+            value: getWeightByTimePeriod(food.weight),
+            name: food.name
+          }
+        })
+      }
+    ]
   };
-
-  setTimeout(() => {
-    isSpinning.value = false;
-    currentRotation.value = newRotation; // 更新当前角度
-    const finalDegree = newRotation % 360;
-    console.log(`Wheel stopped at ${finalDegree} degrees`);
-    alert(selectedFood.value.name);
-  }, spinningTime * 1000);
+  myChart = echarts.init(chartRef.value)
+  myChart.setOption(option)
 };
 
-const getFoodAngleRanges = async () => {
-  let currentAngle = 0;
-  const ranges = new Map<string, { start: number, end: number }>();
+const handleResize = () => {
+  myChart?.resize()
+}
 
-  (await validFoodsComputed.value).forEach(item => {
-    const sliceAngle = (item.weight / totalWeight) * 360;
-    ranges.set(item.name, {
-      start: currentAngle,
-      end: currentAngle + sliceAngle
-    });
-    currentAngle += sliceAngle;
-  });
-
-  return ranges;
-};
-// 选择食物
 const chooseFood = async () => {
-  if (isSpinning.value) return null;
-  selectedFood.value = await selectFood();
-  const ranges = await getFoodAngleRanges();
-  if (!selectedFood.value) return null;
-  const selectedRange = ranges.get(selectedFood.value.name);
-  if (!selectedRange) return null;
-  spinWheel((selectedRange.start + selectedRange.end) / 2);
-  return selectedFood;
-};
+  console.log('chooseFood')
+  let randomRotation = 0;
+  selectFood().then(food => {
+    selectedFood.value = food
 
-watch(validFoodsComputed, async () => {
-  totalWeight = (await validFoodsComputed.value).reduce((acc, item) => acc + item.weight, 0);
-  drawWheel();
-}, { immediate: true });
+    // 计算随机旋转角度 (3-8圈)
+    randomRotation = -(1080 + Math.random() * 1800); // 3-8圈之间随机
 
+    // 先快速旋转
+    myChart.setOption({
+      series: [{
+        startAngle: randomRotation,
+        animationEasingUpdate: 'cubicInOut'
+      }]
+    });
+
+    // 旋转结束后高亮显示选中项
+    setTimeout(() => {
+      const option = myChart.getOption();
+      const seriesData = option.series[0].data;
+
+      const selectedIndex = seriesData.findIndex((item: any) => item.name === food.name);
+      if (selectedIndex !== -1) {
+        myChart.setOption({
+          series: [{
+            data: seriesData.map((item: any, index: number) => ({
+              ...item,
+              itemStyle: {
+                ...item.itemStyle,
+                ...(index === selectedIndex ? {
+                  borderWidth: 4,
+                  borderColor: '#ff9800',
+                  shadowBlur: 10,
+                  shadowColor: 'rgba(255, 152, 0, 0.5)'
+                } : {
+                  borderRadius: 10,
+                  borderColor: '#fff',
+                  borderWidth: 2,
+                  shadowColor: 'transparent'
+                })
+              }
+            }))
+          }]
+        });
+      }
+      message.value = `今天吃${food?.name}`;
+    }, 500);
+  });
+}
+
+onMounted(async () => {
+  await loadFoods();
+  initEcharts()
+  window.addEventListener("resize", handleResize)
+})
+
+onUnmounted(() => {
+  window.removeEventListener("resize", handleResize)
+  myChart?.dispose()
+})
 </script>
 
 <style scoped>
-.wheel-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 20px;
-}
-
-.circle {
-  width: 300px;
-  height: 300px;
-  border: transparent;
-  overflow: hidden;
-}
-
 ion-button {
-  margin-top: 20px;
-  padding: 10px 20px;
+  margin: auto auto;
+  width: 100px;
+  display: block;
 }
 </style>

@@ -8,9 +8,10 @@
     <ion-content class="ion-padding">
       <ion-note>{{ timeNow }}</ion-note>
       <ion-label>今天的{{ timePeriod }}饭要吃的食物是：<br />
-      </ion-label>
       <!-- <ion-label v-if="selectedFood" style="text-align: center;">{{ selectedFood?.name }}</ion-label> -->
-      <WheelSpinner />
+      <WheelSpinner/><br/>
+
+      </ion-label>
       <!-- <ion-button @click="selectFood().then(food => selectedFood = food)">选择食物old</ion-button><br /> -->
     </ion-content>
   </ion-page>
