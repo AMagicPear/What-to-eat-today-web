@@ -130,7 +130,7 @@ const chooseFood = async () => {
           }]
         });
       }
-      message.value = `今天吃${food?.name}`;
+      if (food) message.value = `今天吃${food?.name}`;
     }, 500);
   });
 }
