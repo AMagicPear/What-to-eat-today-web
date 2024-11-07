@@ -24,15 +24,9 @@ import { ref, onMounted, onUnmounted } from "vue"
 import { getWeightByTimePeriod, selectFood, ValidFood } from '@/composables/foodSelector';
 import { FoodConstructor, foodList } from '@/composables/foodConstructor';
 const { loadFoods } = FoodConstructor();
-</script>
-
-<script setup lang="ts">
 const chartRef = ref() // echarts 实例
 let myChart: echarts.ECharts;
-const selectedFood = ref<ValidFood | null>(null)
-const message = ref<string | null>(null)
-
-const initEcharts = () => {
+export const initEcharts = () => {
   const option = {
     tooltip: {
       trigger: 'item'
@@ -79,6 +73,11 @@ const initEcharts = () => {
   myChart = echarts.init(chartRef.value)
   myChart.setOption(option)
 };
+</script>
+
+<script setup lang="ts">
+const selectedFood = ref<ValidFood | null>(null)
+const message = ref<string | null>(null)
 
 const handleResize = () => {
   myChart?.resize()
@@ -106,7 +105,7 @@ const chooseFood = async () => {
       const option = myChart.getOption();
       const seriesData = option.series[0].data;
 
-      const selectedIndex = seriesData.findIndex((item: any) => item.name === food.name);
+      const selectedIndex = seriesData.findIndex((item: any) => item.name === food?.name);
       if (selectedIndex !== -1) {
         myChart.setOption({
           series: [{

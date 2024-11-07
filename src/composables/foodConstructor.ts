@@ -46,6 +46,8 @@ export const FoodConstructor = () => {
         const plainFoods = foodList.value.map(food => JSON.parse(JSON.stringify(food)));
         console.log(plainFoods);
         await storage.set('foodList', plainFoods);
+        const { initEcharts } = await import('@/components/WheelSpinner.vue');
+        initEcharts(); // 食物改变后重新初始化echarts
     }
     const addFood = async (name: string, weight: Weight) => {
         if (foodList.value.find(food => food.name === name)) {
