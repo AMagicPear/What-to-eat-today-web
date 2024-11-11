@@ -7,29 +7,26 @@ export interface Weight {
     evening: number;
 }
 
-class Food {
-    name: string;
-    weight: Weight;
-    counts: number;
-
-    constructor(name: string, weight: Weight, counts: number = 0) {
-        this.name = name;
-        this.weight = weight;
-        this.counts = counts;
-    }
-    static fromStorage(json: IFood) {
-        const weight: Weight = {
-            morning: Number(json.weight.morning),
-            noon: Number(json.weight.noon),
-            evening: Number(json.weight.evening)
-        };
-        return new Food(json.name, weight, json.counts);
-    }
-}
 export interface IFood {
     name: string;
     weight: Weight;
     counts: number;
+}
+
+class Food implements IFood {
+    constructor(
+        public name: string,
+        public weight: Weight,
+        public counts: number = 0
+    ) {}
+
+    static fromStorage({ name, weight, counts }: IFood) {
+        return new Food(name, {
+            morning: Number(weight.morning),
+            noon: Number(weight.noon),
+            evening: Number(weight.evening)
+        }, counts);
+    }
 }
 export const foodList = ref<IFood[]>([]);
 

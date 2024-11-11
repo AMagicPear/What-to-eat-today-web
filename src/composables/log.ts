@@ -1,4 +1,4 @@
-import storage from "@/composables/storage";
+import storage from "./storage";
 import { timeNow } from "./foodSelector";
 import { ref } from "vue";
 
