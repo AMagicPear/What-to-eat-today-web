@@ -1,7 +1,7 @@
 import { ref } from 'vue';
 import storage from './storage';
 
-export interface Weight {
+interface Weight {
     morning: number;
     noon: number;
     evening: number;

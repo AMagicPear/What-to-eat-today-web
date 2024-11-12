@@ -53,7 +53,7 @@
 import { IonPage, IonContent, IonFab, IonFabButton, IonIcon, IonAlert, IonToast, IonHeader, IonToolbar, IonTitle, IonList, IonItem, IonLabel, IonItemSliding, IonItemOptions, IonItemOption, alertController, IonNote, IonBadge, AlertInput, IonReorder, IonReorderGroup, IonToggle, IonCheckbox } from '@ionic/vue';
 import { add, create, trash } from 'ionicons/icons';
 import { ref, onMounted } from 'vue';
-import { FoodConstructor, IFood, foodList } from '@/composables/foodConstructor';
+import { FoodConstructor, type IFood, foodList } from '@/composables/foodConstructor';
 const { addFood, loadFoods, deleteFood, saveFoods } = FoodConstructor();
 export const message = ref<string | null>(null);
 export const checkedList = ref<boolean[]>([]);
