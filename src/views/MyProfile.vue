@@ -13,7 +13,7 @@
         </ion-card-header>
         <ion-card-content>
           <ion-list>
-            <a href="https://amagicpear.github.io" style="text-decoration: none;">
+            <a href="https://www.amagicpear.sbs" style="text-decoration: none;">
               <ion-item>
                 <ion-avatar aria-hidden="true" slot="start">
                   <img alt="AMagicPear" src="/LostInLight.png" />
