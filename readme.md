@@ -1,3 +1,4 @@
+![封面图](./readme-assets/截屏2024-11-16%2011.10.59.png)
 # 今天吃什么
 这是一个使用Vue3+Ionic构建的，专门为我妹妹写的用来帮助决定今天吃什么的Web应用。
 现在包括的功能如下：
@@ -10,7 +11,7 @@
 - [x] 选择时动画效果
 
 项目预览见：
-[今天吃什么](https://amagicpear.github.io/What-to-eat-today-web/)
+[今天吃什么](https://eat.amagicpear.sbs/)
 ![示意图](./readme-assets/截屏2024-10-27%2014.33.30.png)
 
 ## dev
