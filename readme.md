@@ -12,6 +12,8 @@
 
 项目预览见：
 [今天吃什么](https://eat.amagicpear.sbs/)
+实现细节和思路见：
+[story.md](./story.md)
 ![示意图](./readme-assets/截屏2024-10-27%2014.33.30.png)
 
 ## dev
